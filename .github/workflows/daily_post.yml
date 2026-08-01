@@ -1,0 +1,48 @@
+name: Multi-Account Content Publisher
+
+on:
+  schedule:
+    - cron: '0 8 * * *'
+  workflow_dispatch:
+
+jobs:
+  publish-matrix:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - brand: "Happy Hunter Digital"
+            webhook_env: "WEBHOOK_HAPPYHUNTER"
+            focus: "Digital Growth, AEO, Local Search Optimization"
+          - brand: "Ludo League SA"
+            webhook_env: "WEBHOOK_LUDOLEAGUE"
+            focus: "Competitive Gaming, Tournaments, Local Leaderboards"
+          - brand: "Profuse Beauty"
+            webhook_env: "WEBHOOK_PROFUSE"
+            focus: "Cosmetics, Skincare Tips, Product Highlights"
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.10'
+
+      - name: Install Dependencies
+        run: |
+          pip install openai requests
+
+      - name: Execute Daily Post for ${{ matrix.brand }}
+        env:
+          DEEPSEEK_API_KEY: ${{ secrets.DEEPSEEK_API_KEY }}
+          WEBHOOK_HAPPYHUNTER: ${{ secrets.WEBHOOK_HAPPYHUNTER }}
+          WEBHOOK_LUDOLEAGUE: ${{ secrets.WEBHOOK_LUDOLEAGUE }}
+          WEBHOOK_PROFUSE: ${{ secrets.WEBHOOK_PROFUSE }}
+        run: |
+          python scripts/daily_post.py \
+            --brand "${{ matrix.brand }}" \
+            --webhook "${{ matrix.webhook_env }}" \
+            --focus "${{ matrix.focus }}"
