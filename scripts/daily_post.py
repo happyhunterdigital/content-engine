@@ -1,6 +1,5 @@
 import os
 import json
-import sys
 import argparse
 import requests
 from openai import OpenAI
@@ -8,10 +7,11 @@ from openai import OpenAI
 DEEPSEEK_API_KEY = os.getenv("DEEPSEEK_API_KEY")
 
 def parse_args():
-    parser = argparse.ArgumentParser(description="Multi-account content generator.")
+    parser = argparse.ArgumentParser(description="Multi-page Facebook publisher via DeepSeek AI.")
     parser.add_argument("--brand", required=True, help="Brand or account identifier")
-    parser.add_argument("--webhook", required=True, help="Target webhook environment variable name")
-    parser.add_argument("--focus", required=True, help="Core content topic focus")
+    parser.add_argument("--page_id_env", required=True, help="Environment variable name for Facebook Page ID")
+    parser.add_argument("--token_env", required=True, help="Environment variable name for Facebook Page Access Token")
+    parser.add_argument("--focus", required=True, help="Core content focus topic")
     return parser.parse_args()
 
 def generate_brand_content(brand_name, focus_topic):
@@ -21,16 +21,16 @@ def generate_brand_content(brand_name, focus_topic):
     )
     
     prompt = (
-        f"Generate a high-converting daily post for {brand_name}. "
-        f"The primary focus is: {focus_topic}. "
-        f"Keep the tone authoritative, practical, and tailored to this specific brand audience. "
-        f"Return strictly valid JSON with keys: 'headline', 'body', and 'hashtags'."
+        f"Generate a high-converting, highly engaging daily social media post for {brand_name}. "
+        f"The primary topic focus is: {focus_topic}. "
+        f"Keep the tone authoritative, clear, punchy, and structured for social media readability. "
+        f"Return the output strictly in valid JSON format with keys: 'headline', 'body', and 'hashtags'."
     )
     
     response = client.chat.completions.create(
         model="deepseek-chat",
         messages=[
-            {"role": "system", "content": "You are a specialized content generator outputting strictly valid JSON."},
+            {"role": "system", "content": "You are a specialized content marketer outputting strictly valid JSON."},
             {"role": "user", "content": prompt}
         ],
         response_format={"type": "json_object"}
@@ -38,34 +38,35 @@ def generate_brand_content(brand_name, focus_topic):
     
     return json.loads(response.choices[0].message.content)
 
-def publish_content(webhook_url, content, brand_name):
-    formatted_post = f"{content['headline']}\n\n{content['body']}\n\n{' '.join(content['hashtags'])}"
+def publish_to_facebook(page_id, page_token, content, brand_name):
+    hashtags_str = " ".join(content["hashtags"])
+    formatted_post = f"{content['headline']}\n\n{content['body']}\n\n{hashtags_str}"
     
+    url = f"https://graph.facebook.com/v26.0/{page_id}/feed"
     payload = {
-        "account": brand_name,
-        "content": formatted_post,
-        "source": "OpenCode Multi-Account Engine"
+        "message": formatted_post,
+        "access_token": page_token
     }
     
-    headers = {"Content-Type": "application/json"}
-    response = requests.post(webhook_url, data=json.dumps(payload), headers=headers)
+    response = requests.post(url, data=payload)
     
-    if response.status_code in [200, 201]:
-        print(f"Successfully published content for {brand_name}.")
+    if response.status_code == 200:
+        print(f"Successfully published daily post to Facebook Page for {brand_name}.")
     else:
-        print(f"Failed publishing for {brand_name}. Status code: {response.status_code}")
+        print(f"Failed to publish for {brand_name}. Status Code: {response.status_code}, Details: {response.text}")
 
 def main():
     args = parse_args()
-    webhook_url = os.getenv(args.webhook)
+    page_id = os.getenv(args.page_id_env)
+    page_token = os.getenv(args.token_env)
     
     if not DEEPSEEK_API_KEY:
-        raise ValueError("DEEPSEEK_API_KEY environment variable is missing.")
-    if not webhook_url:
-        raise ValueError(f"Webhook URL environment variable '{args.webhook}' is missing.")
+        raise ValueError("Missing DEEPSEEK_API_KEY secret variable.")
+    if not page_id or not page_token:
+        raise ValueError(f"Missing Facebook credentials for {args.brand} ({args.page_id_env} or {args.token_env}).")
         
     content = generate_brand_content(args.brand, args.focus)
-    publish_content(webhook_url, content, args.brand)
+    publish_to_facebook(page_id, page_token, content, args.brand)
 
 if __name__ == "__main__":
     main()
