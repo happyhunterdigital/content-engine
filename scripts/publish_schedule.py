@@ -68,8 +68,8 @@ def publish_post(brand_name, post, dry_run=False):
         page_env = os.getenv("FB_PAGE_ID_LUDOLEAGUE")
         token_env = os.getenv("FB_TOKEN_LUDOLEAGUE")
     else:
-        page_env = os.getenv("FB_PAGE_ID_WELLTH")
-        token_env = os.getenv("FB_TOKEN_WELLTH")
+        page_env = os.getenv("FB_PAGE_ID_IWS")
+        token_env = os.getenv("FB_TOKEN_IWS")
     
     if page_env and token_env:
         url = f"https://graph.facebook.com/v26.0/{page_env}/feed"

@@ -40,8 +40,8 @@ jobs:
           DEEPSEEK_API_KEY: ${{ secrets.DEEPSEEK_API_KEY }}
           FB_PAGE_ID_HAPPYHUNTER: ${{ secrets.FB_PAGE_ID_HAPPYHUNTER }}
           FB_TOKEN_HAPPYHUNTER: ${{ secrets.FB_TOKEN_HAPPYHUNTER }}
-          FB_PAGE_ID_WELLTH: ${{ secrets.FB_PAGE_ID_WELLTH }}
-          FB_TOKEN_WELLTH: ${{ secrets.FB_TOKEN_WELLTH }}
+          FB_PAGE_ID_IWS: ${{ secrets.FB_PAGE_ID_IWS }}
+          FB_TOKEN_IWS: ${{ secrets.FB_TOKEN_IWS }}
           FB_PAGE_ID_LUDOLEAGUE: ${{ secrets.FB_PAGE_ID_LUDOLEAGUE }}
           FB_TOKEN_LUDOLEAGUE: ${{ secrets.FB_TOKEN_LUDOLEAGUE }}
           INPUT_DATE: ${{ github.event.inputs.date }}
