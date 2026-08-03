@@ -1,0 +1,138 @@
+{
+  "brand": "Ludo League SA",
+  "focus": "Competitive Gaming, Digital & Board Tournaments, Community Leaderboards, Event Hype, Grassroots Sport",
+  "schedule": [
+    {
+      "date": "2026-08-03",
+      "day": "Monday",
+      "slot": "08:30",
+      "platform": "Facebook",
+      "pillar": "Brand Story",
+      "format": "post",
+      "headline": "Welcome to the Roll of Legends season",
+      "body": "August is here, and so is another month of dice, drama and dedication. Since the streets of Alexandra, Ludo League SA has been turning a childhood pastime into South Africa's premier competitive Ludo circuit. This is The Roll of Legends. Welcome to the season.",
+      "hashtags": ["#LudoLeagueSA", "#RollOfLegends", "#MoreThanAGame"]
+    },
+    {
+      "date": "2026-08-03",
+      "day": "Monday",
+      "slot": "12:30",
+      "platform": "Instagram",
+      "pillar": "Brand Story",
+      "format": "post",
+      "headline": "From the streets of Alexandra to the global stage",
+      "body": "From the streets of Alexandra to the global stage. That's not a slogan, it's our story. Ludo League SA started as a community tournament and grew into a national sport with referees, rankings and real prize money. Drop a dice emoji if you grew up playing this on the floor with family.",
+      "hashtags": ["#LudoLeagueSA", "#RollOfLegends", "#Mzansi"]
+    },
+    {
+      "date": "2026-08-03",
+      "day": "Monday",
+      "slot": "18:00",
+      "platform": "LinkedIn",
+      "pillar": "Brand Story",
+      "format": "post",
+      "headline": "Building a national sport from the ground up",
+      "body": "How do you turn a childhood pastime into a structured national sport? Ludo League SA has spent over a decade answering that question - building a national framework with certified referees, regional coordinators and standardised rulesets around a game that already lives in almost every South African household. More on our journey this month.",
+      "hashtags": ["#LudoLeagueSA", "#RollOfLegends", "#SportDevelopment", "#SouthAfrica"]
+    },
+    {
+      "date": "2026-08-04",
+      "day": "Tuesday",
+      "slot": "08:30",
+      "platform": "Instagram",
+      "pillar": "Game History",
+      "format": "post",
+      "headline": "Ludo trivia: The roots of Pachisi",
+      "body": "Ludo trivia to start your Tuesday: long before it was a family favourite in South African lounges, Ludo's ancestor was Pachisi - a strategy game played by royalty in India centuries ago. Same spirit of chance and strategy, different board. Did you know that?",
+      "hashtags": ["#LudoLeagueSA", "#RollOfLegends", "#DidYouKnow", "#GameHistory"]
+    },
+    {
+      "date": "2026-08-04",
+      "day": "Tuesday",
+      "slot": "12:30",
+      "platform": "TikTok",
+      "pillar": "Game History",
+      "format": "video",
+      "headline": "Facts you didn't know about Ludo",
+      "body": "Concept: fast-cut 'facts you didn't know about the game you grew up playing' - Pachisi origins, royal history, journey to becoming an SA sport, dice-roll sound effects.",
+      "hashtags": ["#LudoLeagueSA", "#RollOfLegends", "#DidYouKnow", "#LearnOnTikTok"]
+    },
+    {
+      "date": "2026-08-04",
+      "day": "Tuesday",
+      "slot": "18:00",
+      "platform": "X",
+      "pillar": "Game History",
+      "format": "post",
+      "headline": "History has range",
+      "body": "Fun fact: Ludo's ancestor, Pachisi, was played by Indian royalty centuries before it became the game on your living room floor. History has range.",
+      "hashtags": ["#LudoLeagueSA", "#RollOfLegends", "#DidYouKnow"]
+    },
+    {
+      "date": "2026-08-05",
+      "day": "Wednesday",
+      "slot": "08:30",
+      "platform": "LinkedIn",
+      "pillar": "People of the League",
+      "format": "post",
+      "headline": "Elevating Ludo into a recognized sport",
+      "body": "\"My vision was always to elevate ludo from a casual pastime to a recognised, competitive sport.\" - Joe Setladi, Founder & President of Ludo League SA. What started as a personal conviction has grown into a national movement with over 500 active players and a decade of history behind it.",
+      "hashtags": ["#LudoLeagueSA", "#RollOfLegends", "#Leadership", "#FounderStory"]
+    },
+    {
+      "date": "2026-08-05",
+      "day": "Wednesday",
+      "slot": "12:30",
+      "platform": "Facebook",
+      "pillar": "People of the League",
+      "format": "post",
+      "headline": "Meet Tibi - Community Liaison",
+      "body": "Meet Tibi - Co-founder and Community Liaison at Ludo League SA, leading grassroots operations across Mamelodi, Soweto and Alexandra since day one. The league runs on people who show up in the community, every single week.",
+      "hashtags": ["#LudoLeagueSA", "#RollOfLegends", "#CommunityFirst", "#MeetTheTeam"]
+    },
+    {
+      "date": "2026-08-05",
+      "day": "Wednesday",
+      "slot": "18:00",
+      "platform": "Instagram",
+      "pillar": "Fair Play",
+      "format": "post",
+      "headline": "No backyard rules here",
+      "body": "No backyard rules here. Every Ludo League SA match is overseen by certified referees (we call them judges) enforcing one standardised ruleset across every region. That's what turns a game night into a sport.",
+      "hashtags": ["#LudoLeagueSA", "#RollOfLegends", "#FairPlay"]
+    },
+    {
+      "date": "2026-08-06",
+      "day": "Thursday",
+      "slot": "08:30",
+      "platform": "X",
+      "pillar": "Sport Identity",
+      "format": "post",
+      "headline": "Throwback to community roots",
+      "body": "#ThrowbackThursday: from a community tournament in the streets to a structured national league with rankings, referees and regional coordinators. The game didn't change. Everything around it did.",
+      "hashtags": ["#LudoLeagueSA", "#RollOfLegends", "#ThrowbackThursday"]
+    },
+    {
+      "date": "2026-08-06",
+      "day": "Thursday",
+      "slot": "12:30",
+      "platform": "TikTok",
+      "pillar": "Sport Identity",
+      "format": "video",
+      "headline": "The four kit tiers",
+      "body": "Concept: lookbook-style video showing the four kit tiers - Officials, Players, Clubs, Fans - quick caption overlay per tier, upbeat music.",
+      "hashtags": ["#LudoLeagueSA", "#RollOfLegends", "#LudoIsASport", "#KitCheck"]
+    },
+    {
+      "date": "2026-08-06",
+      "day": "Thursday",
+      "slot": "18:00",
+      "platform": "Facebook",
+      "pillar": "Community",
+      "format": "post",
+      "headline": "Branded Ludo boards in public spaces",
+      "body": "Keep an eye out - you might spot a branded Ludo League SA board in a park or community hall near you. We place them directly where people already gather, so the game stays part of everyday life, not just tournament day.",
+      "hashtags": ["#LudoLeagueSA", "#RollOfLegends", "#CommunityFirst"]
+    }
+  ]
+}

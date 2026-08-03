@@ -1,37 +1,27 @@
-name: Multi-Page Content Publisher
+name: Multi-Brand Schedule Publisher
 
 on:
   schedule:
-    # Runs daily at 08:00 AM UTC
-    - cron: '0 8 * * *'
-  workflow_dispatch: # Allows manual trigger testing from GitHub UI
+    # Run at Morning (06:00 UTC = 08:00/08:30 SAST), Midday (11:00 UTC = 12:30/13:00 SAST), Evening (16:00 UTC = 18:00 SAST)
+    - cron: '0 6,11,16 * * *'
+  workflow_dispatch:
+    inputs:
+      date:
+        description: 'Date (YYYY-MM-DD, e.g. 2026-08-03)'
+        required: false
+        default: ''
+      slot:
+        description: 'Time Slot (Morning, Midday, Evening, all)'
+        required: false
+        default: 'all'
 
 jobs:
-  publish-matrix:
+  publish:
     runs-on: ubuntu-latest
     strategy:
       fail-fast: false
       matrix:
-        include:
-          - brand: "Happy Hunter Digital"
-            page_id_env: "FB_PAGE_ID_HAPPYHUNTER"
-            token_env: "FB_TOKEN_HAPPYHUNTER"
-            focus: "Digital Growth, Answer Engine Optimization (AEO), Local Search Visibility, Growth Strategy"
-            format: "post"
-            with_image: "false"
-          - brand: "Ludo League SA"
-            page_id_env: "FB_PAGE_ID_LUDOLEAGUE"
-            token_env: "FB_TOKEN_LUDOLEAGUE"
-            focus: "Competitive Gaming, Digital & Board Tournaments, Community Leaderboards, Event Hype"
-            format: "thread"
-            with_image: "false"
-          - brand: "Profuse Beauty"
-            page_id_env: "FB_PAGE_ID_PROFUSE"
-            token_env: "FB_TOKEN_PROFUSE"
-            focus: "Cosmetics, Modern Skincare Routines, Beauty Tips, Product Highlights"
-            format: "caption"
-            with_image: "true"
-
+        brand: ["Happy Hunter Digital", "Integrated Wellth Solutions", "Ludo League SA"]
     steps:
       - name: Checkout Repository Code
         uses: actions/checkout@v6
@@ -43,26 +33,39 @@ jobs:
 
       - name: Install Python Dependencies
         run: |
-          pip install openai requests
+          pip install requests openai
 
-      - name: Run Publisher for ${{ matrix.brand }}
+      - name: Run Schedule Publisher for ${{ matrix.brand }}
         env:
           DEEPSEEK_API_KEY: ${{ secrets.DEEPSEEK_API_KEY }}
           FB_PAGE_ID_HAPPYHUNTER: ${{ secrets.FB_PAGE_ID_HAPPYHUNTER }}
           FB_TOKEN_HAPPYHUNTER: ${{ secrets.FB_TOKEN_HAPPYHUNTER }}
+          FB_PAGE_ID_WELLTH: ${{ secrets.FB_PAGE_ID_WELLTH }}
+          FB_TOKEN_WELLTH: ${{ secrets.FB_TOKEN_WELLTH }}
           FB_PAGE_ID_LUDOLEAGUE: ${{ secrets.FB_PAGE_ID_LUDOLEAGUE }}
           FB_TOKEN_LUDOLEAGUE: ${{ secrets.FB_TOKEN_LUDOLEAGUE }}
-          FB_PAGE_ID_PROFUSE: ${{ secrets.FB_PAGE_ID_PROFUSE }}
-          FB_TOKEN_PROFUSE: ${{ secrets.FB_TOKEN_PROFUSE }}
+          INPUT_DATE: ${{ github.event.inputs.date }}
+          INPUT_SLOT: ${{ github.event.inputs.slot }}
         run: |
+          SLOT_ARG="${INPUT_SLOT:-all}"
+          if [ -z "$INPUT_SLOT" ] || [ "$INPUT_SLOT" = "all" ]; then
+            UTC_HOUR=$(date -u +%H)
+            if [ "$UTC_HOUR" -eq 6 ]; then
+              SLOT_ARG="Morning"
+            elif [ "$UTC_HOUR" -eq 11 ]; then
+              SLOT_ARG="Midday"
+            elif [ "$UTC_HOUR" -eq 16 ]; then
+              SLOT_ARG="Evening"
+            else
+              SLOT_ARG="all"
+            fi
+          fi
+
           ARGS=(
             --brand "${{ matrix.brand }}"
-            --page_id_env "${{ matrix.page_id_env }}"
-            --token_env "${{ matrix.token_env }}"
-            --focus "${{ matrix.focus }}"
-            --format "${{ matrix.format }}"
+            --slot "$SLOT_ARG"
           )
-          if [ "${{ matrix.with_image }}" = "true" ]; then
-            ARGS+=(--with_image)
+          if [ -n "$INPUT_DATE" ]; then
+            ARGS+=(--date "$INPUT_DATE")
           fi
-          python scripts/daily_post.py "${ARGS[@]}"
+          python scripts/publish_schedule.py "${ARGS[@]}"
