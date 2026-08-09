@@ -1,0 +1,3 @@
+output_slides/
+__pycache__/
+*.pyc
