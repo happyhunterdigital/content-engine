@@ -243,8 +243,30 @@ def render_html_carousel_slides(body_text, brand_name):
         
     return slide_image_paths, caption
 
+CAROUSEL_CTAS = {
+    "instagram": "Get the free AI-Driven Social Media Strategy guide — link in bio.",
+    "tiktok": "Get the free AI-Driven Social Media Strategy guide — link in bio.",
+    "facebook": "Download the free AI-Driven Social Media Strategy guide: happyhunterdigital.com/assets/happyhunterdigital%20AI-Driven%20Social%20Media%20Strategy.pdf",
+    "x": "Download the free guide: happyhunterdigital.com/assets/happyhunterdigital%20AI-Driven%20Social%20Media%20Strategy.pdf",
+    "linkedin": "Download the free AI-Driven Social Media Strategy guide: happyhunterdigital.com/assets/happyhunterdigital%20AI-Driven%20Social%20Media%20Strategy.pdf",
+}
+
+def apply_lead_magnet(platform, text):
+    """Replace generic lead-magnet CTA with platform-appropriate link."""
+    platform = platform.lower()
+    cta = CAROUSEL_CTAS.get(platform, "Download the free AI-Driven Social Media Strategy guide: happyhunterdigital.com/assets/happyhunterdigital%20AI-Driven%20Social%20Media%20Strategy.pdf")
+    if "[FREE_PDF_CAPTION]" in text:
+        text = text.replace("[FREE_PDF_CAPTION]", cta)
+    if "[FREE_PDF_LINK]" in text:
+        text = text.replace("[FREE_PDF_LINK]", cta)
+    # Fallback: make sure it ends with a CTA if not present
+    if "happyhunterdigital.com" not in text.lower() and "bio" not in text.lower():
+        text = text.strip() + "\n\n" + cta
+    return text
+
 def publish_post(brand_name, post, dry_run=False):
     format_type = post.get("format", "").lower()
+    platform = post.get("platform", "")
     
     # Check if this post is a video / reel that should be skipped per user instruction
     if format_type in ["video", "reel"] or "[video]" in post.get("body", "").lower() or "[reel]" in post.get("body", "").lower():
@@ -255,7 +277,7 @@ def publish_post(brand_name, post, dry_run=False):
         
     is_carousel = format_type == "carousel" or "SLIDE 1" in post.get("body", "")
     slide_paths = []
-    caption_text = f"{post['headline']}\n\n{post['body']}\n\n{' '.join(post.get('hashtags', []))}"
+    caption_text = apply_lead_magnet(platform, f"{post['headline']}\n\n{post['body']}\n\n{' '.join(post.get('hashtags', []))}")
     
     if is_carousel:
         slide_paths, extracted_caption = render_html_carousel_slides(post['body'], brand_name)
