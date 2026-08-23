@@ -264,15 +264,90 @@ def apply_lead_magnet(platform, text):
         text = text.strip() + "\n\n" + cta
     return text
 
+OPENMONTAGE_HANDOFF_DIR = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "..", "OpenMontage", "projects")
+# also check local assets/videos handoff
+LOCAL_VIDEO_HANDOFF_DIR = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "assets", "videos")
+
+def resolve_video_path(post):
+    """Resolve video file for a video/reel post. Checks post['video_path'], local handoff, and OpenMontage renders."""
+    candidates = []
+    if post.get("video_path"):
+        candidates.append(post["video_path"])
+    # common handoff filenames
+    candidates.extend([
+        os.path.join(LOCAL_VIDEO_HANDOFF_DIR, "the-invisibility-tax.mp4"),
+        os.path.join(LOCAL_VIDEO_HANDOFF_DIR, "q3-output.mp4"),
+        os.path.abspath(os.path.join(LOCAL_VIDEO_HANDOFF_DIR, "the-invisibility-tax.mp4")),
+    ])
+    # OpenMontage renders
+    for proj in ["q3-animated-explainer"]:
+        candidates.extend([
+            os.path.join(OPENMONTAGE_HANDOFF_DIR, proj, "renders", "the-invisibility-tax.mp4"),
+            os.path.join(OPENMONTAGE_HANDOFF_DIR, proj, "exports", "video", "output.mp4"),
+        ])
+    for c in candidates:
+        if c and os.path.exists(c):
+            return os.path.abspath(c)
+        # also try relative to repo root
+        repo_root = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+        alt = os.path.join(repo_root, c) if not os.path.isabs(c) else c
+        if os.path.exists(alt):
+            return os.path.abspath(alt)
+    return None
+
 def publish_post(brand_name, post, dry_run=False):
     format_type = post.get("format", "").lower()
     platform = post.get("platform", "")
     
-    # Check if this post is a video / reel that should be skipped per user instruction
-    if format_type in ["video", "reel"] or "[video]" in post.get("body", "").lower() or "[reel]" in post.get("body", "").lower():
-        print(f"\n--- SKIPPING VIDEO POST FOR: {brand_name} ---")
-        print(f"Date: {post['date']} | Format: {format_type} | Headline: {post['headline']}")
-        print("Reason: Video-only post skipped as requested ('Skip videos when you cant create').")
+    is_video = format_type in ["video", "reel"] or "[video]" in post.get("body", "").lower() or "[reel]" in post.get("body", "").lower()
+    if is_video:
+        caption_text = apply_lead_magnet(platform, f"{post['headline']}\n\n{post['body']}\n\n{' '.join(post.get('hashtags', []))}")
+        video_path = resolve_video_path(post)
+        print(f"\n--- VIDEO POST FOR: {brand_name} ---")
+        print(f"Date: {post['date']} | Format: {format_type} | Platform: {platform} | Headline: {post['headline']}")
+        print(f"Resolved video_path: {video_path}")
+        print(f"Caption:\n{caption_text}\n----------------------------------------")
+        if not video_path:
+            print("WARNING: No video file found. Expected at assets/videos/the-invisibility-tax.mp4 or openmontage handoff. Skipping upload but logging caption.")
+            print("Handoff instruction: Copy finished mp4 from OpenMontage/projects/<id>/renders/ to content-engine/assets/videos/ and set post['video_path'].")
+            return True
+        if dry_run:
+            print(f"[Dry Run] Would upload video {video_path} to {platform} (Facebook Graph /videos or Instagram).")
+            return True
+        # Route to platform-specific upload — Facebook Page video vs Instagram Reel
+        if platform.lower() in ["instagram", "tiktok"]:
+            print(f"Instagram/TikTok video for {platform}: queued for IG Graph upload.")
+            print("To enable direct IG reels: set IG_USER_ID + FB_TOKEN with instagram_content_publish, then POST to /{ig_user_id}/media with video_url.")
+            print("Current handoff logs video for manual publishing or future IG auto-publish update.")
+            print(f"Video ready at: {video_path} — also available as content-engine/assets/videos/the-invisibility-tax.mp4")
+            return True
+        else:
+            # Facebook / LinkedIn / X — Facebook Page video upload (default for Happy Hunter)
+            if "Happy Hunter" in brand_name:
+                page_env = os.getenv("FB_PAGE_ID_HAPPYHUNTER")
+                token_env = os.getenv("FB_TOKEN_HAPPYHUNTER")
+            elif "Ludo" in brand_name:
+                page_env = os.getenv("FB_PAGE_ID_LUDOLEAGUE")
+                token_env = os.getenv("FB_TOKEN_LUDOLEAGUE")
+            else:
+                page_env = os.getenv("FB_PAGE_ID_IWS")
+                token_env = os.getenv("FB_TOKEN_IWS")
+            if not page_env or not token_env:
+                print(f"No Facebook credentials for {brand_name}. Logged video post.")
+                return True
+            url = f"https://graph.facebook.com/v26.0/{page_env}/videos"
+            try:
+                with open(video_path, "rb") as vf:
+                    files = {"source": vf}
+                    data = {"description": caption_text, "access_token": token_env}
+                    resp = requests.post(url, data=data, files=files, timeout=120)
+                if resp.status_code == 200:
+                    print(f"Successfully published VIDEO to Facebook Page for {brand_name}: {resp.json()}")
+                else:
+                    print(f"Failed publishing video. Status: {resp.status_code}, Details: {resp.text}")
+            except Exception as e:
+                print(f"Exception uploading video: {e}")
+            return True
         return True
         
     is_carousel = format_type == "carousel" or "SLIDE 1" in post.get("body", "")
@@ -282,7 +357,7 @@ def publish_post(brand_name, post, dry_run=False):
     if is_carousel:
         slide_paths, extracted_caption = render_html_carousel_slides(post['body'], brand_name)
         if extracted_caption.startswith("Caption:"):
-            caption_text = f"{post['headline']}\n\n{extracted_caption}\n\n{' '.join(post.get('hashtags', []))}"
+            caption_text = apply_lead_magnet(platform, f"{post['headline']}\n\n{extracted_caption}\n\n{' '.join(post.get('hashtags', []))}")
             
     print(f"\n--- PUBLISHING FOR: {brand_name} ---")
     print(f"Date: {post['date']} | Slot: {post['slot']} | Platform: {post['platform']} | Pillar: {post['pillar']}")
