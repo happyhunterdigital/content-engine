@@ -244,17 +244,17 @@ def render_html_carousel_slides(body_text, brand_name):
     return slide_image_paths, caption
 
 CAROUSEL_CTAS = {
-    "instagram": "Get the free AI-Driven Social Media Strategy guide — link in bio.",
-    "tiktok": "Get the free AI-Driven Social Media Strategy guide — link in bio.",
-    "facebook": "Download the free AI-Driven Social Media Strategy guide: happyhunterdigital.com/assets/happyhunterdigital%20AI-Driven%20Social%20Media%20Strategy.pdf",
-    "x": "Download the free guide: happyhunterdigital.com/assets/happyhunterdigital%20AI-Driven%20Social%20Media%20Strategy.pdf",
-    "linkedin": "Download the free AI-Driven Social Media Strategy guide: happyhunterdigital.com/assets/happyhunterdigital%20AI-Driven%20Social%20Media%20Strategy.pdf",
+    "instagram": "Get your free AI visibility audit — link in bio.",
+    "tiktok": "Get your free AI visibility audit — link in bio.",
+    "facebook": "Get your free AI visibility audit: https://www.happyhunterdigital.com/audit",
+    "x": "Get your free AI visibility audit: https://www.happyhunterdigital.com/audit",
+    "linkedin": "Get your free AI visibility audit: https://www.happyhunterdigital.com/audit",
 }
 
 def apply_lead_magnet(platform, text):
     """Replace generic lead-magnet CTA with platform-appropriate link."""
     platform = platform.lower()
-    cta = CAROUSEL_CTAS.get(platform, "Download the free AI-Driven Social Media Strategy guide: happyhunterdigital.com/assets/happyhunterdigital%20AI-Driven%20Social%20Media%20Strategy.pdf")
+    cta = CAROUSEL_CTAS.get(platform, "Get your free AI visibility audit: https://www.happyhunterdigital.com/audit")
     if "[FREE_PDF_CAPTION]" in text:
         text = text.replace("[FREE_PDF_CAPTION]", cta)
     if "[FREE_PDF_LINK]" in text:
