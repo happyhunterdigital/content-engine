@@ -291,14 +291,13 @@ def host_file_for_ig(local_path, resource_type="image"):
     cloud_name = os.getenv("CLOUDINARY_CLOUD_NAME") or "dkyg07qvv"
     api_key = os.getenv("CLOUDINARY_API_KEY")
     api_secret = os.getenv("CLOUDINARY_API_SECRET")
-    upload_preset = os.getenv("CLOUDINARY_UPLOAD_PRESET")
-    print(f"host_file_for_ig: {local_path} ({resource_type}) cloud={cloud_name} key={'set' if api_key else 'missing'} secret={'set' if api_secret else 'missing'} preset={upload_preset or 'none'}")
+    upload_preset = os.getenv("CLOUDINARY_UPLOAD_PRESET") or "ml_default"
+    print(f"host_file_for_ig: {local_path} ({resource_type}) cloud={cloud_name} key={'set' if api_key else 'missing'} secret={'set' if api_secret else 'missing'} preset={upload_preset}")
     # 1) Cloudinary signed (most reliable, uses your dkyg07qvv secrets)
     if api_key and api_secret:
         try:
             import time, hashlib
             timestamp = int(time.time())
-            # signature = sha1(sorted_params + api_secret). For timestamp-only, params = timestamp=...
             to_sign = f"timestamp={timestamp}{api_secret}"
             sig = hashlib.sha1(to_sign.encode()).hexdigest()
             url = f"https://api.cloudinary.com/v1_1/{cloud_name}/{resource_type}/upload"
@@ -318,6 +317,21 @@ def host_file_for_ig(local_path, resource_type="image"):
             print(f"Cloudinary signed upload exception: {e}")
     else:
         print("Cloudinary signed skipped (missing API key/secret)")
+    # 1b) Cloudinary unsigned fallback (uses ml_default preset, no secret needed)
+    try:
+        url = f"https://api.cloudinary.com/v1_1/{cloud_name}/{resource_type}/upload"
+        with open(local_path, "rb") as f:
+            files = {"file": f}
+            data = {"upload_preset": upload_preset}
+            resp = requests.post(url, data=data, files=files, timeout=60)
+        print(f"Cloudinary unsigned ({upload_preset}) resp {resp.status_code}: {resp.text[:400]}")
+        if resp.status_code == 200:
+            surl = resp.json().get("secure_url")
+            if surl:
+                print(f"Cloudinary unsigned hosted: {surl}")
+                return surl
+    except Exception as e:
+        print(f"Cloudinary unsigned exception: {e}")
     # 2) 0x0.st (no auth, 512MB limit, permanent)
     for host_url, field in [("https://0x0.st", "file"), ("https://catbox.moe/user/api.php", "fileToUpload")]:
         try:
