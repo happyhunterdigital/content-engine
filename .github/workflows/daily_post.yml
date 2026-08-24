@@ -41,10 +41,6 @@ jobs:
           DEEPSEEK_API_KEY: ${{ secrets.DEEPSEEK_API_KEY }}
           FB_PAGE_ID_HAPPYHUNTER: ${{ secrets.FB_PAGE_ID_HAPPYHUNTER }}
           FB_TOKEN_HAPPYHUNTER: ${{ secrets.FB_TOKEN_HAPPYHUNTER }}
-          IG_USER_ID_HAPPYHUNTER: ${{ secrets.IG_USER_ID_HAPPYHUNTER }}
-          IG_USER_ID_IWS: ${{ secrets.IG_USER_ID_IWS }}
-          IG_USER_ID_LUDOLEAGUE: ${{ secrets.IG_USER_ID_LUDOLEAGUE }}
-          IG_USER_ID: ${{ secrets.IG_USER_ID }}
           FB_PAGE_ID_IWS: ${{ secrets.FB_PAGE_ID_IWS }}
           FB_TOKEN_IWS: ${{ secrets.FB_TOKEN_IWS }}
           FB_PAGE_ID_LUDOLEAGUE: ${{ secrets.FB_PAGE_ID_LUDOLEAGUE }}
@@ -78,3 +74,14 @@ jobs:
             ARGS+=(--date "$INPUT_DATE")
           fi
           python scripts/publish_schedule.py "${ARGS[@]}"
+
+      - name: Upload Instagram pack (for manual IG post — no IG_USER_ID needed)
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: instagram-pack-${{ matrix.brand }}-${{ github.event.inputs.date || 'scheduled' }}
+          path: |
+            instagram_pack/
+            output_slides/
+          if-no-files-found: ignore
+          retention-days: 7

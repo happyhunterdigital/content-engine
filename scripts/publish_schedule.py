@@ -268,23 +268,11 @@ OPENMONTAGE_HANDOFF_DIR = os.path.join(os.path.dirname(os.path.dirname(os.path.a
 # also check local assets/videos handoff
 LOCAL_VIDEO_HANDOFF_DIR = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "assets", "videos")
 
-# ---------- Instagram + hosting helpers ----------
-def get_ig_config(brand_name):
-    """Return (ig_user_id, token) for brand, or (None, None) if not configured."""
-    brand = brand_name.lower()
-    if "happy hunter" in brand:
-        return os.getenv("IG_USER_ID_HAPPYHUNTER"), os.getenv("FB_TOKEN_HAPPYHUNTER") or os.getenv("IG_TOKEN_HAPPYHUNTER")
-    if "ludo" in brand:
-        return os.getenv("IG_USER_ID_LUDOLEAGUE"), os.getenv("FB_TOKEN_LUDOLEAGUE")
-    if "wellth" in brand or "iws" in brand:
-        return os.getenv("IG_USER_ID_IWS"), os.getenv("FB_TOKEN_IWS")
-    # generic fallback
-    return os.getenv("IG_USER_ID"), os.getenv("FB_TOKEN_HAPPYHUNTER")
-
+# ---------- Instagram + hosting helpers (pack mode: no IG_USER_ID needed) ----------
 def host_file_for_ig(local_path, resource_type="image"):
     """
-    Upload local file to a public host so Instagram Graph can fetch it via image_url/video_url.
-    Tries Cloudinary (if CLOUDINARY_CLOUD_NAME + API key/secret or unsigned preset), else tries catbox.moe.
+    Upload local file to a public host for Instagram manual pack.
+    Tries Cloudinary (if CLOUDINARY_CLOUD_NAME + API key/secret), else catbox.moe.
     Returns public URL or None.
     """
     if not os.path.exists(local_path):
@@ -293,7 +281,6 @@ def host_file_for_ig(local_path, resource_type="image"):
     api_key = os.getenv("CLOUDINARY_API_KEY")
     api_secret = os.getenv("CLOUDINARY_API_SECRET")
     upload_preset = os.getenv("CLOUDINARY_UPLOAD_PRESET")
-    # 1) Try Cloudinary signed upload if creds present
     if api_key and api_secret:
         try:
             import time, hashlib
@@ -313,7 +300,6 @@ def host_file_for_ig(local_path, resource_type="image"):
                 print(f"Cloudinary signed upload failed: {resp.status_code} {resp.text[:300]}")
         except Exception as e:
             print(f"Cloudinary signed upload exception: {e}")
-    # 2) Try Cloudinary unsigned if preset provided
     if upload_preset:
         try:
             url = f"https://api.cloudinary.com/v1_1/{cloud_name}/{resource_type}/upload"
@@ -327,7 +313,6 @@ def host_file_for_ig(local_path, resource_type="image"):
                 print(f"Cloudinary unsigned upload failed: {resp.status_code} {resp.text[:300]}")
         except Exception as e:
             print(f"Cloudinary unsigned upload exception: {e}")
-    # 3) Fallback: catbox.moe (no auth, temporary but public)
     try:
         with open(local_path, "rb") as f:
             files = {"fileToUpload": f, "reqtype": (None, "fileupload")}
@@ -340,91 +325,43 @@ def host_file_for_ig(local_path, resource_type="image"):
         print(f"catbox upload exception: {e}")
     return None
 
-def publish_instagram_carousel(ig_user_id, token, slide_paths, caption, dry_run=False):
-    """Publish carousel to Instagram via IG Graph API using hosted image URLs."""
-    if dry_run:
-        print(f"[Dry Run] Instagram carousel: would create {len(slide_paths)} media containers for IG {ig_user_id}")
+def write_instagram_pack(brand_name, post, slide_paths, caption, hosted_urls=None):
+    """Write Instagram manual pack: caption.txt, links.txt, hosted URLs. No IG API needed."""
+    repo_root = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+    pack_root = os.path.join(repo_root, "instagram_pack", post["date"])
+    safe_slot = re.sub(r'[^0-9a-zA-Z]+', '-', post["slot"])
+    safe_headline = re.sub(r'[^A-Za-z0-9]+', '-', post["headline"])[:40].strip('-')
+    pack_dir = os.path.join(pack_root, f"{post['platform']}_{safe_slot}_{safe_headline}")
+    os.makedirs(pack_dir, exist_ok=True)
+    # Clean caption: paragraphs, bold highlights (Unicode bold via ** removed -> uppercase), no AI markers
+    clean_caption = caption.replace("**", "").replace("*", "").strip()
+    # Write caption
+    with open(os.path.join(pack_dir, "caption.txt"), "w", encoding="utf-8") as f:
+        f.write(clean_caption + "\n")
+    # Write links
+    with open(os.path.join(pack_dir, "links.txt"), "w", encoding="utf-8") as f:
+        f.write(f"Brand: {brand_name}\nDate: {post['date']} Slot: {post['slot']} Platform: {post['platform']}\n")
+        f.write(f"Headline: {post['headline']}\n")
+        if hosted_urls:
+            f.write("\nHosted image URLs (Cloudinary/catbox):\n")
+            for i, u in enumerate(hosted_urls, 1):
+                f.write(f"Slide {i}: {u}\n")
+        f.write("\nLocal slides:\n")
         for p in slide_paths:
-            print(f"  - {p}")
-        print(f"Caption: {caption[:200]}")
-        return True
-    # Host each slide
-    hosted_urls = []
+            f.write(f"{p}\n")
+        f.write(f"\nCaption preview:\n{clean_caption[:500]}\n")
+    # Copy slides into pack for easy download
     for p in slide_paths:
-        url = host_file_for_ig(p, "image")
-        if not url:
-            print(f"Failed to host slide {p} for Instagram — aborting carousel. Set CLOUDINARY_* or check hosting.")
-            return False
-        hosted_urls.append(url)
-        print(f"Hosted slide for IG: {url}")
-    # Create carousel items
-    children_ids = []
-    for url in hosted_urls:
-        resp = requests.post(f"https://graph.facebook.com/v26.0/{ig_user_id}/media",
-                             data={"image_url": url, "is_carousel_item": "true", "access_token": token}, timeout=60)
-        if resp.status_code != 200:
-            print(f"IG carousel item creation failed: {resp.text}")
-            return False
-        children_ids.append(resp.json().get("id"))
-        print(f"IG carousel child id: {children_ids[-1]}")
-    # Create carousel container
-    resp = requests.post(f"https://graph.facebook.com/v26.0/{ig_user_id}/media",
-                         data={"media_type": "CAROUSEL", "children": ",".join(children_ids), "caption": caption, "access_token": token}, timeout=60)
-    if resp.status_code != 200:
-        print(f"IG carousel container failed: {resp.text}")
-        return False
-    creation_id = resp.json().get("id")
-    # Publish
-    resp = requests.post(f"https://graph.facebook.com/v26.0/{ig_user_id}/media_publish",
-                         data={"creation_id": creation_id, "access_token": token}, timeout=60)
-    if resp.status_code == 200:
-        print(f"Successfully published Instagram CAROUSEL {creation_id} -> {resp.json()}")
-        return True
-    else:
-        print(f"IG carousel publish failed: {resp.text}")
-        return False
-
-def publish_instagram_reel(ig_user_id, token, video_path, caption, dry_run=False):
-    """Publish Reels to Instagram. Requires public video_url."""
-    if dry_run:
-        print(f"[Dry Run] Instagram Reel: would host {video_path} and create Reels for IG {ig_user_id}")
-        return True
-    video_url = host_file_for_ig(video_path, "video")
-    if not video_url:
-        print(f"Failed to host video {video_path} for Instagram Reel. Need Cloudinary or catbox.")
-        return False
-    print(f"Hosted video for IG Reel: {video_url}")
-    resp = requests.post(f"https://graph.facebook.com/v26.0/{ig_user_id}/media",
-                         data={"media_type": "REELS", "video_url": video_url, "caption": caption, "access_token": token}, timeout=60)
-    if resp.status_code != 200:
-        print(f"IG Reels creation failed: {resp.text}")
-        return False
-    creation_id = resp.json().get("id")
-    print(f"IG Reels creation_id {creation_id}, polling status...")
-    # Poll for FINISHED (IG needs processing)
-    import time
-    for _ in range(30):
-        time.sleep(4)
-        r = requests.get(f"https://graph.facebook.com/v26.0/{creation_id}", params={"fields": "status_code", "access_token": token}, timeout=15)
-        if r.status_code == 200:
-            status = r.json().get("status_code")
-            print(f"  status: {status}")
-            if status == "FINISHED":
-                break
-            if status in ("ERROR", "EXPIRED"):
-                print(f"IG Reels processing failed: {r.text}")
-                return False
-        else:
-            print(f"Status poll failed: {r.text}")
-    # Publish
-    resp = requests.post(f"https://graph.facebook.com/v26.0/{ig_user_id}/media_publish",
-                         data={"creation_id": creation_id, "access_token": token}, timeout=60)
-    if resp.status_code == 200:
-        print(f"Successfully published Instagram REEL {creation_id} -> {resp.json()}")
-        return True
-    else:
-        print(f"IG Reels publish failed: {resp.text}")
-        return False
+        try:
+            import shutil
+            shutil.copy(p, os.path.join(pack_dir, os.path.basename(p)))
+        except: pass
+    print(f"Instagram pack written: {pack_dir}")
+    if hosted_urls:
+        print("Hosted URLs:")
+        for u in hosted_urls:
+            print(f"  {u}")
+    return pack_dir
 
 def resolve_video_path(post):
     """Resolve video file for a video/reel post. Checks post['video_path'], local handoff, and OpenMontage renders."""
@@ -472,15 +409,14 @@ def publish_post(brand_name, post, dry_run=False):
         if dry_run:
             print(f"[Dry Run] Would upload video {video_path} to {platform} (Facebook Graph /videos or Instagram Reel).")
             return True
-        # Instagram Reels
+        # Instagram Reels -> pack mode (no IG_USER_ID needed)
         if platform.lower() in ["instagram", "tiktok"]:
-            ig_user_id, ig_token = get_ig_config(brand_name)
-            if not ig_user_id or not ig_token:
-                print(f"IG config missing for {brand_name}: IG_USER_ID_HAPPYHUNTER / FB_TOKEN_HAPPYHUNTER not set. Cannot publish Reel to IG.")
-                print(f"Set IG_USER_ID_HAPPYHUNTER (from /{{page_id}}?fields=instagram_business_account) and ensure token has instagram_content_publish.")
-                print(f"Video still available locally at {video_path} for manual upload.")
-                return True
-            publish_instagram_reel(ig_user_id, ig_token, video_path, caption_text, dry_run=False)
+            print(f"Instagram/TikTok Reel: generating manual pack (no IG API needed).")
+            hosted_video = None if dry_run else host_file_for_ig(video_path, "video")
+            if hosted_video:
+                print(f"Hosted video for manual IG post: {hosted_video}")
+            pack_dir = write_instagram_pack(brand_name, post, [video_path], caption_text, [hosted_video] if hosted_video else [])
+            print(f"Reel pack ready at {pack_dir} — download artifact or copy caption.txt to Instagram app.")
             return True
         else:
             # Facebook / LinkedIn / X — Facebook Page video upload (default for Happy Hunter)
@@ -520,37 +456,42 @@ def publish_post(brand_name, post, dry_run=False):
         if extracted_caption.startswith("Caption:"):
             caption_text = apply_lead_magnet(platform, f"{post['headline']}\n\n{extracted_caption}\n\n{' '.join(post.get('hashtags', []))}")
     
-    # Route Instagram vs Facebook BEFORE generic Facebook handling
+    # Route Instagram vs Facebook BEFORE generic Facebook handling — Instagram pack mode (no API)
     if platform.lower() in ["instagram", "tiktok"]:
-        # Instagram path: carousel or post
         if is_carousel and slide_paths:
             print(f"\n--- INSTAGRAM CAROUSEL FOR: {brand_name} ---")
             print(f"Date: {post['date']} | Slot: {post['slot']} | Pillar: {post['pillar']}")
             print(f"Caption:\n{caption_text}\nSlides: {len(slide_paths)}")
             print("----------------------------------------")
             if dry_run:
-                print(f"[Dry Run] Would publish Instagram carousel ({len(slide_paths)} slides) for {brand_name}")
+                print(f"[Dry Run] Would generate Instagram pack ({len(slide_paths)} slides) for {brand_name} at instagram_pack/{post['date']}/")
+                write_instagram_pack(brand_name, post, slide_paths, caption_text, [])
                 return True
-            ig_user_id, ig_token = get_ig_config(brand_name)
-            if not ig_user_id or not ig_token:
-                print(f"IG config missing for {brand_name}: IG_USER_ID_HAPPYHUNTER / FB_TOKEN_HAPPYHUNTER not set.")
-                print("Cannot publish to Instagram — set IG_USER_ID_HAPPYHUNTER (from Graph /{page_id}?fields=instagram_business_account) and token with instagram_content_publish.")
-                print("Falling back to LOGGING only — slides remain at output_slides/*.png for manual upload.")
-                return True
-            publish_instagram_carousel(ig_user_id, ig_token, slide_paths, caption_text, dry_run=False)
+            # Host slides to Cloudinary (or catbox fallback) for public URLs
+            hosted = []
+            for p in slide_paths:
+                url = host_file_for_ig(p, "image")
+                if url:
+                    hosted.append(url)
+                    print(f"Hosted for IG: {url}")
+                else:
+                    print(f"Warning: failed to host {p} — pack will still contain local copy.")
+                    hosted.append("(local only)")
+            pack_dir = write_instagram_pack(brand_name, post, slide_paths, caption_text, hosted)
+            print(f"Instagram pack ready. In GitHub Actions download artifact `instagram-pack-{post['date']}` or grab from {pack_dir}")
+            print(f"To post: open Instagram app → New Post → Carousel → select {len(slide_paths)} slides from {pack_dir} → Paste caption.txt → Publish. Link in bio CTA is audit.")
             return True
         elif is_carousel:
-            # Should not happen (slide_paths empty but flagged carousel) — fallback
             pass
         else:
-            # Instagram single image / text post — not typical; we fallback to carousel logic or log
             print(f"\n--- INSTAGRAM POST FOR: {brand_name} ---")
-            print(f"Format {format_type} on Instagram requires image/carousel/reel. This post is text-only — logging for manual handling.")
+            print(f"Format {format_type} on Instagram requires image/carousel/reel. Logging pack for manual handling.")
             print(f"Caption:\n{caption_text}\n----------------------------------------")
             if dry_run:
-                print("[Dry Run] Instagram text post — would need image. Logged.")
+                print("[Dry Run] Instagram text post — pack logged.")
+                write_instagram_pack(brand_name, post, slide_paths, caption_text, [])
                 return True
-            print("No IG publish for text-only. Convert to carousel or Reels, or post manually.")
+            write_instagram_pack(brand_name, post, slide_paths, caption_text, [])
             return True
             
     print(f"\n--- PUBLISHING FOR: {brand_name} ---")
