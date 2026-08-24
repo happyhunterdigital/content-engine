@@ -317,7 +317,7 @@ def host_file_for_ig(local_path, resource_type="image"):
             print(f"Cloudinary signed upload exception: {e}")
     else:
         print("Cloudinary signed skipped (missing API key/secret)")
-    # 1b) Cloudinary unsigned fallback (uses ml_default preset, no secret needed)
+    # 1b) Cloudinary unsigned fallback (try ml_default, ignore failure)
     try:
         url = f"https://api.cloudinary.com/v1_1/{cloud_name}/{resource_type}/upload"
         with open(local_path, "rb") as f:
@@ -326,12 +326,15 @@ def host_file_for_ig(local_path, resource_type="image"):
             resp = requests.post(url, data=data, files=files, timeout=60)
         print(f"Cloudinary unsigned ({upload_preset}) resp {resp.status_code}: {resp.text[:400]}")
         if resp.status_code == 200:
-            surl = resp.json().get("secure_url")
-            if surl:
-                print(f"Cloudinary unsigned hosted: {surl}")
-                return surl
+            try:
+                surl = resp.json().get("secure_url")
+                if surl:
+                    print(f"Cloudinary unsigned hosted: {surl}")
+                    return surl
+            except: pass
     except Exception as e:
         print(f"Cloudinary unsigned exception: {e}")
+    print(f"Trying fallback hosts 0x0.st and catbox for {os.path.basename(local_path)}")
     # 2) 0x0.st (no auth, 512MB limit, permanent)
     for host_url, field in [("https://0x0.st", "file"), ("https://catbox.moe/user/api.php", "fileToUpload")]:
         try:
