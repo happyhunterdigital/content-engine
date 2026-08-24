@@ -268,7 +268,17 @@ OPENMONTAGE_HANDOFF_DIR = os.path.join(os.path.dirname(os.path.dirname(os.path.a
 # also check local assets/videos handoff
 LOCAL_VIDEO_HANDOFF_DIR = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "assets", "videos")
 
-# ---------- Instagram + hosting helpers (pack mode: no IG_USER_ID needed) ----------
+# ---------- Instagram helpers (auto via Graph if IG_USER_ID set, else pack) ----------
+def get_ig_config(brand_name):
+    b = brand_name.lower()
+    if "happy hunter" in b:
+        return os.getenv("IG_USER_ID_HAPPYHUNTER"), os.getenv("FB_TOKEN_HAPPYHUNTER") or os.getenv("IG_TOKEN_HAPPYHUNTER")
+    if "ludo" in b:
+        return os.getenv("IG_USER_ID_LUDOLEAGUE"), os.getenv("FB_TOKEN_LUDOLEAGUE")
+    if "wellth" in b or "iws" in b:
+        return os.getenv("IG_USER_ID_IWS"), os.getenv("FB_TOKEN_IWS")
+    return os.getenv("IG_USER_ID"), os.getenv("FB_TOKEN_HAPPYHUNTER")
+
 def host_file_for_ig(local_path, resource_type="image"):
     """
     Upload local file to a public host for Instagram manual pack.
@@ -324,6 +334,34 @@ def host_file_for_ig(local_path, resource_type="image"):
     except Exception as e:
         print(f"catbox upload exception: {e}")
     return None
+
+def publish_instagram_carousel_graph(ig_user_id, token, slide_paths, caption):
+    hosted = []
+    for p in slide_paths:
+        url = host_file_for_ig(p, "image")
+        if not url:
+            print(f"Failed to host {p} for IG Graph")
+            return False
+        hosted.append(url)
+        print(f"Hosted for IG Graph: {url}")
+    children = []
+    for url in hosted:
+        r = requests.post(f"https://graph.facebook.com/v26.0/{ig_user_id}/media", data={"image_url": url, "is_carousel_item": "true", "access_token": token}, timeout=60)
+        if r.status_code != 200:
+            print(f"IG carousel item failed: {r.text}")
+            return False
+        children.append(r.json().get("id"))
+    r = requests.post(f"https://graph.facebook.com/v26.0/{ig_user_id}/media", data={"media_type": "CAROUSEL", "children": ",".join(children), "caption": caption, "access_token": token}, timeout=60)
+    if r.status_code != 200:
+        print(f"IG carousel container failed: {r.text}")
+        return False
+    cid = r.json().get("id")
+    r = requests.post(f"https://graph.facebook.com/v26.0/{ig_user_id}/media_publish", data={"creation_id": cid, "access_token": token}, timeout=60)
+    if r.status_code == 200:
+        print(f"Successfully published Instagram CAROUSEL {cid} -> {r.json()}")
+        return True
+    print(f"IG carousel publish failed: {r.text}")
+    return False
 
 def write_instagram_pack(brand_name, post, slide_paths, caption, hosted_urls=None):
     """Write Instagram manual pack: caption.txt, links.txt, hosted URLs. No IG API needed."""
@@ -456,7 +494,7 @@ def publish_post(brand_name, post, dry_run=False):
         if extracted_caption.startswith("Caption:"):
             caption_text = apply_lead_magnet(platform, f"{post['headline']}\n\n{extracted_caption}\n\n{' '.join(post.get('hashtags', []))}")
     
-    # Route Instagram vs Facebook BEFORE generic Facebook handling — Instagram pack mode (no API)
+    # Route Instagram vs Facebook BEFORE generic Facebook handling — try Graph auto, fallback to pack
     if platform.lower() in ["instagram", "tiktok"]:
         if is_carousel and slide_paths:
             print(f"\n--- INSTAGRAM CAROUSEL FOR: {brand_name} ---")
@@ -464,9 +502,23 @@ def publish_post(brand_name, post, dry_run=False):
             print(f"Caption:\n{caption_text}\nSlides: {len(slide_paths)}")
             print("----------------------------------------")
             if dry_run:
-                print(f"[Dry Run] Would generate Instagram pack ({len(slide_paths)} slides) for {brand_name} at instagram_pack/{post['date']}/")
+                print(f"[Dry Run] Would publish Instagram carousel ({len(slide_paths)} slides) for {brand_name}")
                 write_instagram_pack(brand_name, post, slide_paths, caption_text, [])
                 return True
+            ig_user_id, ig_token = get_ig_config(brand_name)
+            if ig_user_id and ig_token:
+                print(f"IG_USER_ID found ({ig_user_id[:6]}...), attempting Graph auto-publish to Instagram...")
+                if publish_instagram_carousel_graph(ig_user_id, ig_token, slide_paths, caption_text):
+                    # also write pack as backup
+                    try:
+                        hosted = []
+                        for p in slide_paths:
+                            u = host_file_for_ig(p, "image")
+                            hosted.append(u or "(local only)")
+                        write_instagram_pack(brand_name, post, slide_paths, caption_text, hosted)
+                    except: pass
+                    return True
+                print("Graph publish failed, falling back to pack mode.")
             # Host slides to Cloudinary (or catbox fallback) for public URLs
             hosted = []
             for p in slide_paths:
