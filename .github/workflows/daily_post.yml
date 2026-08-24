@@ -33,7 +33,7 @@ jobs:
 
       - name: Install Python Dependencies & Playwright
         run: |
-          pip install requests openai playwright Pillow
+          pip install requests openai playwright Pillow instagrapi
           playwright install chromium --with-deps
 
       - name: Run Schedule Publisher for ${{ matrix.brand }}
@@ -44,6 +44,8 @@ jobs:
           IG_USER_ID_HAPPYHUNTER: ${{ secrets.IG_USER_ID_HAPPYHUNTER }}
           IG_USER_ID_IWS: ${{ secrets.IG_USER_ID_IWS }}
           IG_USER_ID_LUDOLEAGUE: ${{ secrets.IG_USER_ID_LUDOLEAGUE }}
+          IG_USERNAME: ${{ secrets.IG_USERNAME }}
+          IG_PASSWORD: ${{ secrets.IG_PASSWORD }}
           FB_PAGE_ID_IWS: ${{ secrets.FB_PAGE_ID_IWS }}
           FB_TOKEN_IWS: ${{ secrets.FB_TOKEN_IWS }}
           FB_PAGE_ID_LUDOLEAGUE: ${{ secrets.FB_PAGE_ID_LUDOLEAGUE }}

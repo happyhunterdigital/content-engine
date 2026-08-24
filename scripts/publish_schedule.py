@@ -373,6 +373,45 @@ def verify_ig_id(ig_user_id, token):
         print(f"verify_ig_id exception: {e}")
     return None
 
+def publish_instagram_private_api(slide_paths, caption, dry_run=False):
+    """Publish carousel via instagrapi private API using IG_USERNAME/IG_PASSWORD (bypasses Graph App Review)."""
+    ig_user = os.getenv("IG_USERNAME")
+    ig_pass = os.getenv("IG_PASSWORD")
+    if not ig_user or not ig_pass:
+        print("IG private API: missing IG_USERNAME/IG_PASSWORD")
+        return False
+    if dry_run:
+        print(f"[Dry Run] Would private-API post {len(slide_paths)} slides as @{ig_user}")
+        return True
+    try:
+        from instagrapi import Client
+        cl = Client()
+        # Reduce challenge rate
+        cl.delay_range = [1, 3]
+        print(f"Private API login as @{ig_user}...")
+        # Try to load previous session if exists (not needed in ephemeral runner)
+        logged = cl.login(ig_user, ig_pass)
+        if not logged:
+            print("Private API login failed")
+            return False
+        print(f"Logged in: {cl.username} -> album upload {len(slide_paths)}")
+        # instagrapi expects local paths, handles resize
+        media = cl.album_upload(slide_paths, caption=caption)
+        if media:
+            mid = getattr(media, 'id', None) or getattr(media, 'pk', None)
+            print(f"Successfully published via PRIVATE API Instagram CAROUSEL {mid} -> https://www.instagram.com/p/{getattr(media, 'code', '')}/")
+            try:
+                cl.logout()
+            except: pass
+            return True
+        print("Private API album_upload returned None")
+        return False
+    except Exception as e:
+        print(f"Private API exception: {e}")
+        import traceback
+        traceback.print_exc()
+        return False
+
 def publish_instagram_carousel_graph(ig_user_id, token, slide_paths, caption):
     verify_ig_id(ig_user_id, token)
     hosted = []
@@ -533,7 +572,7 @@ def publish_post(brand_name, post, dry_run=False):
         if extracted_caption.startswith("Caption:"):
             caption_text = apply_lead_magnet(platform, f"{post['headline']}\n\n{extracted_caption}\n\n{' '.join(post.get('hashtags', []))}")
     
-    # Route Instagram vs Facebook BEFORE generic Facebook handling — try Graph auto, fallback to pack
+    # Route Instagram vs Facebook BEFORE generic Facebook handling — try Private API -> Graph -> pack
     if platform.lower() in ["instagram", "tiktok"]:
         if is_carousel and slide_paths:
             print(f"\n--- INSTAGRAM CAROUSEL FOR: {brand_name} ---")
@@ -541,9 +580,19 @@ def publish_post(brand_name, post, dry_run=False):
             print(f"Caption:\n{caption_text}\nSlides: {len(slide_paths)}")
             print("----------------------------------------")
             if dry_run:
-                print(f"[Dry Run] Would publish Instagram carousel ({len(slide_paths)} slides) for {brand_name}")
+                has_private = bool(os.getenv("IG_USERNAME") and os.getenv("IG_PASSWORD"))
+                print(f"[Dry Run] Would publish Instagram carousel ({len(slide_paths)} slides) for {brand_name} via {'private API' if has_private else 'Graph/pack'}")
                 write_instagram_pack(brand_name, post, slide_paths, caption_text, [])
                 return True
+            # 1) Private API (instagrapi) — bypasses Graph App Review, uses IG_USERNAME/IG_PASSWORD you just set
+            if os.getenv("IG_USERNAME") and os.getenv("IG_PASSWORD"):
+                print(f"Private API credentials found (IG_USERNAME={os.getenv('IG_USERNAME')}), attempting direct post to Instagram...")
+                if publish_instagram_private_api(slide_paths, caption_text, dry_run=False):
+                    try:
+                        write_instagram_pack(brand_name, post, slide_paths, caption_text, [])
+                    except: pass
+                    return True
+                print("Private API failed, trying Graph...")
             ig_user_id, ig_token = get_ig_config(brand_name)
             if ig_user_id and ig_token:
                 print(f"IG_USER_ID found ({ig_user_id[:6]}...), attempting Graph auto-publish to Instagram...")
