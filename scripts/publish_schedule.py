@@ -281,61 +281,83 @@ def get_ig_config(brand_name):
 
 def host_file_for_ig(local_path, resource_type="image"):
     """
-    Upload local file to a public host for Instagram manual pack.
-    Tries Cloudinary (if CLOUDINARY_CLOUD_NAME + API key/secret), else catbox.moe.
+    Upload local file to a public host for Instagram Graph (needs image_url/video_url).
+    Tries Cloudinary signed -> Cloudinary unsigned -> 0x0.st -> catbox.
     Returns public URL or None.
     """
     if not os.path.exists(local_path):
+        print(f"host_file_for_ig: file not found {local_path}")
         return None
     cloud_name = os.getenv("CLOUDINARY_CLOUD_NAME") or "dkyg07qvv"
     api_key = os.getenv("CLOUDINARY_API_KEY")
     api_secret = os.getenv("CLOUDINARY_API_SECRET")
     upload_preset = os.getenv("CLOUDINARY_UPLOAD_PRESET")
+    print(f"host_file_for_ig: {local_path} ({resource_type}) cloud={cloud_name} key={'set' if api_key else 'missing'} secret={'set' if api_secret else 'missing'} preset={upload_preset or 'none'}")
+    # 1) Cloudinary signed (most reliable, uses your dkyg07qvv secrets)
     if api_key and api_secret:
         try:
             import time, hashlib
             timestamp = int(time.time())
-            params = f"timestamp={timestamp}"
-            sig = hashlib.sha1(f"{params}{api_secret}".encode()).hexdigest()
+            # signature = sha1(sorted_params + api_secret). For timestamp-only, params = timestamp=...
+            to_sign = f"timestamp={timestamp}{api_secret}"
+            sig = hashlib.sha1(to_sign.encode()).hexdigest()
             url = f"https://api.cloudinary.com/v1_1/{cloud_name}/{resource_type}/upload"
             with open(local_path, "rb") as f:
                 files = {"file": f}
                 data = {"api_key": api_key, "timestamp": timestamp, "signature": sig}
-                if upload_preset:
-                    data["upload_preset"] = upload_preset
                 resp = requests.post(url, data=data, files=files, timeout=60)
+            print(f"Cloudinary signed resp {resp.status_code}: {resp.text[:400]}")
             if resp.status_code == 200:
-                return resp.json().get("secure_url")
+                surl = resp.json().get("secure_url")
+                if surl:
+                    print(f"Cloudinary signed hosted: {surl}")
+                    return surl
             else:
-                print(f"Cloudinary signed upload failed: {resp.status_code} {resp.text[:300]}")
+                print(f"Cloudinary signed upload failed: {resp.status_code} {resp.text[:500]}")
         except Exception as e:
             print(f"Cloudinary signed upload exception: {e}")
-    if upload_preset:
+    else:
+        print("Cloudinary signed skipped (missing API key/secret)")
+    # 2) 0x0.st (no auth, 512MB limit, permanent)
+    for host_url, field in [("https://0x0.st", "file"), ("https://catbox.moe/user/api.php", "fileToUpload")]:
         try:
-            url = f"https://api.cloudinary.com/v1_1/{cloud_name}/{resource_type}/upload"
             with open(local_path, "rb") as f:
-                files = {"file": f}
-                data = {"upload_preset": upload_preset}
-                resp = requests.post(url, data=data, files=files, timeout=60)
-            if resp.status_code == 200:
-                return resp.json().get("secure_url")
-            else:
-                print(f"Cloudinary unsigned upload failed: {resp.status_code} {resp.text[:300]}")
+                if "0x0.st" in host_url:
+                    files = {"file": f}
+                    resp = requests.post(host_url, files=files, timeout=60)
+                    txt = resp.text.strip()
+                    print(f"{host_url} resp {resp.status_code}: {txt[:300]}")
+                    if resp.status_code == 200 and txt.startswith("http"):
+                        return txt
+                else:
+                    files = {"fileToUpload": f}
+                    data = {"reqtype": "fileupload"}
+                    resp = requests.post(host_url, files=files, data=data, timeout=60)
+                    txt = resp.text.strip()
+                    print(f"catbox resp {resp.status_code}: {txt[:300]}")
+                    if resp.status_code == 200 and txt.startswith("http"):
+                        return txt
         except Exception as e:
-            print(f"Cloudinary unsigned upload exception: {e}")
+            print(f"{host_url} upload exception: {e}")
+    print(f"host_file_for_ig: all hosts failed for {local_path}")
+    return None
+
+def verify_ig_id(ig_user_id, token):
+    """Log which IG username an ID maps to — helps confirm happyhunterdigital vs Business opportunities."""
     try:
-        with open(local_path, "rb") as f:
-            files = {"fileToUpload": f, "reqtype": (None, "fileupload")}
-            resp = requests.post("https://catbox.moe/user/api.php", files=files, timeout=60)
-        if resp.status_code == 200 and resp.text.startswith("http"):
-            return resp.text.strip()
+        r = requests.get(f"https://graph.facebook.com/v26.0/{ig_user_id}", params={"fields": "username,name,profile_picture_url", "access_token": token}, timeout=15)
+        if r.status_code == 200:
+            j = r.json()
+            print(f"IG ID {ig_user_id} -> username @{j.get('username')} name {j.get('name')}")
+            return j.get("username")
         else:
-            print(f"catbox upload failed: {resp.status_code} {resp.text[:200]}")
+            print(f"verify_ig_id failed: {r.status_code} {r.text[:300]}")
     except Exception as e:
-        print(f"catbox upload exception: {e}")
+        print(f"verify_ig_id exception: {e}")
     return None
 
 def publish_instagram_carousel_graph(ig_user_id, token, slide_paths, caption):
+    verify_ig_id(ig_user_id, token)
     hosted = []
     for p in slide_paths:
         url = host_file_for_ig(p, "image")
