@@ -21,8 +21,13 @@ if ig_id and token:
         j=r.json() if r.status_code==200 else {}
         cid=j.get("id")
         if cid:
-            r2=requests.post(f"https://graph.facebook.com/v26.0/{ig_id}/media_publish", data={"creation_id": cid, "access_token": token}, timeout=30)
-            print(f"IG publish: {r2.status_code} {r2.text[:600]}")
+            import time
+            for attempt in range(5):
+                time.sleep(10)
+                r2=requests.post(f"https://graph.facebook.com/v26.0/{ig_id}/media_publish", data={"creation_id": cid, "access_token": token}, timeout=30)
+                print(f"IG publish attempt {attempt+1}: {r2.status_code} {r2.text[:600]}")
+                if r2.status_code==200:
+                    break
     except Exception as e:
         print(f"IG exception: {e}")
 else:
