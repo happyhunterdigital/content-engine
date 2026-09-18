@@ -386,9 +386,10 @@ def publish_instagram_private_api(slide_paths, caption, dry_run=False):
     try:
         from instagrapi import Client
         cl = Client()
-        # Reduce challenge rate
-        cl.delay_range = [1, 3]
-        print(f"Private API login as @{ig_user}...")
+        # Reduce challenge rate - GH runner IP is heavily rate-limited by Instagram
+        cl.delay_range = [2, 5]
+        # Detect recent 429 to avoid hammering - Instagram blocks ephemeral runner IPs fast
+        print(f"Private API login as @{ig_user}... (note: GH runner IP often 429-throttled, Graph is preferred)")
         # Try to load previous session if exists (not needed in ephemeral runner)
         logged = cl.login(ig_user, ig_pass)
         if not logged:
@@ -407,7 +408,12 @@ def publish_instagram_private_api(slide_paths, caption, dry_run=False):
         print("Private API album_upload returned None")
         return False
     except Exception as e:
-        print(f"Private API exception: {e}")
+        err = str(e)
+        if "429" in err or "too many" in err.lower():
+            print(f"Private API exception (RATE LIMITED 429 - Instagram throttled GH runner IP): {e}")
+            print("Hint: Wait 2-4 hours, or fix Graph token (IG_USER_ID/FB_TOKEN) - Graph does not have this limit.")
+        else:
+            print(f"Private API exception: {e}")
         import traceback
         traceback.print_exc()
         return False
@@ -434,11 +440,19 @@ def publish_instagram_carousel_graph(ig_user_id, token, slide_paths, caption):
         print(f"IG carousel container failed: {r.text}")
         return False
     cid = r.json().get("id")
-    r = requests.post(f"https://graph.facebook.com/v26.0/{ig_user_id}/media_publish", data={"creation_id": cid, "access_token": token}, timeout=60)
-    if r.status_code == 200:
-        print(f"Successfully published Instagram CAROUSEL {cid} -> {r.json()}")
-        return True
-    print(f"IG carousel publish failed: {r.text}")
+    import time
+    for attempt in range(5):
+        time.sleep(10)
+        r = requests.post(f"https://graph.facebook.com/v26.0/{ig_user_id}/media_publish", data={"creation_id": cid, "access_token": token}, timeout=60)
+        if r.status_code == 200:
+            print(f"Successfully published Instagram CAROUSEL {cid} -> {r.json()}")
+            return True
+        if "not ready" in r.text.lower() or "not available" in r.text.lower():
+            print(f"IG carousel publish attempt {attempt+1}: container not ready yet, retrying...")
+            continue
+        print(f"IG carousel publish failed: {r.text}")
+        return False
+    print(f"IG carousel publish failed after 5 attempts: container {cid} not ready")
     return False
 
 def write_instagram_pack(brand_name, post, slide_paths, caption, hosted_urls=None):
