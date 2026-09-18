@@ -3,6 +3,7 @@ import json
 import argparse
 import re
 import sys
+import html
 from datetime import datetime, timezone, timedelta
 import requests
 from playwright.sync_api import sync_playwright
@@ -77,7 +78,7 @@ def render_html_carousel_slides(body_text, brand_name):
         page = browser.new_page(viewport={"width": 1080, "height": 1080})
         
         for idx, (title, content) in enumerate(parsed_slides, start=1):
-            clean_content = content.strip('"\'')
+            clean_content = html.escape(content.strip('"\''))
             
             html_template = f"""<!DOCTYPE html>
 <html>
@@ -696,21 +697,24 @@ def publish_post(brand_name, post, dry_run=False):
             resp = requests.post(url, data=payload, timeout=30)
             if resp.status_code == 200:
                 print(f"Successfully published Option 1 HTML Carousel to Facebook Page for {brand_name}.")
+                return True
             else:
                 print(f"Failed publishing carousel post. Status: {resp.status_code}, Details: {resp.text}")
+                return False
         else:
             print("Failed uploading slide images, posting text fallback.")
-            requests.post(f"https://graph.facebook.com/v26.0/{page_env}/feed", data={"message": caption_text, "access_token": token_env}, timeout=30)
+            resp = requests.post(f"https://graph.facebook.com/v26.0/{page_env}/feed", data={"message": caption_text, "access_token": token_env}, timeout=30)
+            return resp.status_code == 200
     else:
         url = f"https://graph.facebook.com/v26.0/{page_env}/feed"
         payload = {"message": caption_text, "access_token": token_env}
         resp = requests.post(url, data=payload, timeout=30)
         if resp.status_code == 200:
             print(f"Successfully published post to Facebook Page for {brand_name}.")
+            return True
         else:
             print(f"Failed to publish to Facebook. Status: {resp.status_code}, Details: {resp.text}")
-            
-    return True
+            return False
 
 def main():
     args = parse_args()
@@ -719,6 +723,7 @@ def main():
     
     schedules = load_schedules()
     published_count = 0
+    failed_count = 0
     
     for brand_data in schedules:
         brand_name = brand_data["brand"]
@@ -729,10 +734,17 @@ def main():
             if post["date"] == target_date:
                 if args.slot != "all" and normalize_slot(post["slot"]) != normalize_slot(args.slot):
                     continue
-                publish_post(brand_name, post, dry_run=args.dry_run)
-                published_count += 1
-                
-    print(f"\nTotal posts matched and processed for {target_date}: {published_count}")
+                success = publish_post(brand_name, post, dry_run=args.dry_run)
+                if success:
+                    published_count += 1
+                else:
+                    failed_count += 1
+                    
+    print(f"\nTotal posts matched and processed for {target_date}: {published_count} published, {failed_count} failed")
+    
+    if published_count == 0 and failed_count > 0:
+        print("ERROR: All posts failed to publish")
+        sys.exit(1)
 
 if __name__ == "__main__":
     main()

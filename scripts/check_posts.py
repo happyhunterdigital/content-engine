@@ -52,4 +52,3 @@ if __name__ == "__main__":
     check("Ludo", os.getenv("FB_PAGE_ID_LUDOLEAGUE"), os.getenv("FB_TOKEN_LUDOLEAGUE"))
     # Instagram
     check_ig(os.getenv("IG_USER_ID_HAPPYHUNTER"), os.getenv("FB_TOKEN_HAPPYHUNTER"))
-    check_ig(os.getenv("IG_USER_ID_HAPPYHUNTER"), os.getenv("FB_TOKEN_HAPPYHUNTER"))
