@@ -33,7 +33,7 @@ jobs:
 
       - name: Install Python Dependencies & Playwright
         run: |
-          pip install requests openai playwright Pillow instagrapi tweepy
+          pip install requests openai playwright Pillow instagrapi requests-oauthlib
           playwright install chromium --with-deps
 
       - name: Run Schedule Publisher for ${{ matrix.brand }}

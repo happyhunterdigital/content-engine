@@ -415,7 +415,7 @@ def publish_linkedin(text, dry_run=False):
         return False
 
 def publish_x(text, dry_run=False):
-    """Publish a tweet to X/Twitter using OAuth 1.0a."""
+    """Publish a tweet to X/Twitter using OAuth 1.0a with requests-oauthlib."""
     api_key = os.getenv("X_API_KEY")
     api_secret = os.getenv("X_API_SECRET")
     access_token = os.getenv("X_ACCESS_TOKEN")
@@ -427,16 +427,16 @@ def publish_x(text, dry_run=False):
         print(f"[Dry Run] Would tweet: {text[:100]}...")
         return True
     try:
-        import tweepy
-        client = tweepy.Client(
-            consumer_key=api_key,
-            consumer_secret=api_secret,
-            access_token=access_token,
-            access_token_secret=access_secret
-        )
-        r = client.create_tweet(text=text)
-        print(f"Successfully posted to X: tweet_id={r.data['id']}")
-        return True
+        from requests_oauthlib import OAuth1Session
+        oauth = OAuth1Session(api_key, client_secret=api_secret, resource_owner_key=access_token, resource_owner_secret=access_secret)
+        r = oauth.post("https://api.x.com/2/tweets", json={"text": text})
+        if r.status_code == 201:
+            tweet_id = r.json()["data"]["id"]
+            print(f"Successfully posted to X: tweet_id={tweet_id}")
+            return True
+        else:
+            print(f"X post failed: {r.status_code} {r.text[:300]}")
+            return False
     except Exception as e:
         print(f"X post exception: {e}")
         return False
