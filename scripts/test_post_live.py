@@ -57,10 +57,7 @@ if all([x_api_key, x_api_secret, x_access, x_access_secret]):
         from requests_oauthlib import OAuth1Session
         oauth = OAuth1Session(x_api_key, client_secret=x_api_secret, resource_owner_key=x_access, resource_owner_secret=x_access_secret)
         r = oauth.post("https://api.x.com/2/tweets", json={"text": "Test post from content-engine - AI visibility audit live. Get your free scan: https://www.happyhunterdigital.com/audit"})
-        if r.status_code == 201:
-            print(f"X tweet: OK tweet_id={r.json()['data']['id']}")
-        else:
-            print(f"X failed: {r.status_code} {r.text[:300]}")
+        print(f"X response: {r.status_code} {r.text[:500]}")
     except Exception as e:
         print(f"X exception: {e}")
 else:
