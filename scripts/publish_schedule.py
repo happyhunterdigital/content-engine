@@ -432,8 +432,7 @@ def publish_x(text, dry_run=False):
             consumer_key=api_key,
             consumer_secret=api_secret,
             access_token=access_token,
-            access_token_secret=access_secret,
-            user_auth=True
+            access_token_secret=access_secret
         )
         r = client.create_tweet(text=text)
         print(f"Successfully posted to X: tweet_id={r.data['id']}")
