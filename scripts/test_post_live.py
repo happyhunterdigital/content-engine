@@ -32,3 +32,33 @@ if ig_id and token:
         print(f"IG exception: {e}")
 else:
     print("IG skipped - missing ID/token")
+
+# LinkedIn test
+linkedin_token = os.getenv("LINKEDIN_ACCESS_TOKEN")
+linkedin_urn = os.getenv("LINKEDIN_PERSON_URN")
+if linkedin_token and linkedin_urn:
+    try:
+        headers = {"Authorization": f"Bearer {linkedin_token}", "Content-Type": "application/json"}
+        payload = {"author": linkedin_urn, "lifecycleState": "PUBLISHED", "specificContent": {"com.linkedin.ugc.ShareContent": {"shareCommentary": {"text": "Test post from content-engine - GEO visibility check. Get your free audit: https://www.happyhunterdigital.com/audit"}, "shareMediaCategory": "NONE"}}, "visibility": {"com.linkedin.ugc.MemberNetworkVisibility": "PUBLIC"}}
+        r = requests.post("https://api.linkedin.com/v2/ugcPosts", headers=headers, json=payload, timeout=30)
+        print(f"LinkedIn: {r.status_code} {r.text[:600]}")
+    except Exception as e:
+        print(f"LinkedIn exception: {e}")
+else:
+    print("LinkedIn skipped - missing token/URN")
+
+# X test
+x_api_key = os.getenv("X_API_KEY")
+x_api_secret = os.getenv("X_API_SECRET")
+x_access = os.getenv("X_ACCESS_TOKEN")
+x_access_secret = os.getenv("X_ACCESS_SECRET")
+if all([x_api_key, x_api_secret, x_access, x_access_secret]):
+    try:
+        import tweepy
+        client = tweepy.Client(consumer_key=x_api_key, consumer_secret=x_api_secret, access_token=x_access, access_token_secret=x_access_secret)
+        r = client.create_tweet(text="Test post from content-engine - AI visibility audit live. Get your free scan: https://www.happyhunterdigital.com/audit")
+        print(f"X tweet: OK tweet_id={r.data['id']}")
+    except Exception as e:
+        print(f"X exception: {e}")
+else:
+    print("X skipped - missing credentials")
