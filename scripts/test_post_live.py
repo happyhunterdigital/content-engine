@@ -56,8 +56,8 @@ if all([x_api_key, x_api_secret, x_access, x_access_secret]):
     try:
         from requests_oauthlib import OAuth1Session
         oauth = OAuth1Session(x_api_key, client_secret=x_api_secret, resource_owner_key=x_access, resource_owner_secret=x_access_secret)
-        r = oauth.post("https://api.x.com/2/tweets", json={"text": "Test post from content-engine - AI visibility audit live. Get your free scan: https://www.happyhunterdigital.com/audit"})
-        print(f"X response: {r.status_code} {r.text[:500]}")
+        r = oauth.post("https://api.x.com/1.1/statuses/update.json", data={"status": "Test post from content-engine - AI visibility audit live. Get your free scan: https://www.happyhunterdigital.com/audit"})
+        print(f"X response: {r.status_code} {r.text.replace(chr(10), ' ')[:500]}")
     except Exception as e:
         print(f"X exception: {e}")
 else:
