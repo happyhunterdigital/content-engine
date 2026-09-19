@@ -55,9 +55,10 @@ x_access_secret = os.getenv("X_ACCESS_SECRET")
 if all([x_api_key, x_api_secret, x_access, x_access_secret]):
     try:
         import tweepy
-        client = tweepy.Client(consumer_key=x_api_key, consumer_secret=x_api_secret, access_token=x_access, access_token_secret=x_access_secret)
-        r = client.create_tweet(text="Test post from content-engine - AI visibility audit live. Get your free scan: https://www.happyhunterdigital.com/audit")
-        print(f"X tweet: OK tweet_id={r.data['id']}")
+        auth = tweepy.OAuth1UserHandler(x_api_key, x_api_secret, x_access, x_access_secret)
+        api = tweepy.API(auth)
+        r = api.update_status("Test post from content-engine - AI visibility audit live. Get your free scan: https://www.happyhunterdigital.com/audit")
+        print(f"X tweet: OK tweet_id={r.id}")
     except Exception as e:
         print(f"X exception: {e}")
 else:

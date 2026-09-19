@@ -428,14 +428,10 @@ def publish_x(text, dry_run=False):
         return True
     try:
         import tweepy
-        client = tweepy.Client(
-            consumer_key=api_key,
-            consumer_secret=api_secret,
-            access_token=access_token,
-            access_token_secret=access_secret
-        )
-        r = client.create_tweet(text=text)
-        print(f"Successfully posted to X: tweet_id={r.data['id']}")
+        auth = tweepy.OAuth1UserHandler(api_key, api_secret, access_token, access_secret)
+        api = tweepy.API(auth)
+        r = api.update_status(text)
+        print(f"Successfully posted to X: tweet_id={r.id}")
         return True
     except Exception as e:
         print(f"X post exception: {e}")
