@@ -414,6 +414,33 @@ def publish_linkedin(text, dry_run=False):
         print(f"LinkedIn exception: {e}")
         return False
 
+def publish_x(text, dry_run=False):
+    """Publish a tweet to X/Twitter using OAuth 1.0a."""
+    api_key = os.getenv("X_API_KEY")
+    api_secret = os.getenv("X_API_SECRET")
+    access_token = os.getenv("X_ACCESS_TOKEN")
+    access_secret = os.getenv("X_ACCESS_SECRET")
+    if not all([api_key, api_secret, access_token, access_secret]):
+        print("X: missing X_API_KEY, X_API_SECRET, X_ACCESS_TOKEN, or X_ACCESS_SECRET")
+        return False
+    if dry_run:
+        print(f"[Dry Run] Would tweet: {text[:100]}...")
+        return True
+    try:
+        import tweepy
+        client = tweepy.Client(
+            consumer_key=api_key,
+            consumer_secret=api_secret,
+            access_token=access_token,
+            access_token_secret=access_secret
+        )
+        r = client.create_tweet(text=text)
+        print(f"Successfully posted to X: tweet_id={r.data['id']}")
+        return True
+    except Exception as e:
+        print(f"X post exception: {e}")
+        return False
+
 def publish_instagram_private_api(slide_paths, caption, dry_run=False):
     """Publish carousel via instagrapi private API using IG_USERNAME/IG_PASSWORD (bypasses Graph App Review)."""
     ig_user = os.getenv("IG_USERNAME")
@@ -696,6 +723,17 @@ def publish_post(brand_name, post, dry_run=False):
         linkedin_text = f"{post['headline']}\n\n{post['body']}\n\n{' '.join(post.get('hashtags', []))}"
         print(f"Caption:\n{linkedin_text[:200]}...\n----------------------------------------")
         return publish_linkedin(linkedin_text, dry_run=dry_run)
+    
+    # X (Twitter) routing
+    if platform.lower() in ["x", "twitter"]:
+        print(f"\n--- X/TWITTER POST FOR: {brand_name} ---")
+        print(f"Date: {post['date']} | Slot: {post['slot']} | Pillar: {post['pillar']}")
+        x_text = f"{post['headline']}\n\n{post['body']}\n\n{' '.join(post.get('hashtags', []))}"
+        # X has 280 char limit - truncate if needed
+        if len(x_text) > 280:
+            x_text = x_text[:277] + "..."
+        print(f"Tweet:\n{x_text}\n----------------------------------------")
+        return publish_x(x_text, dry_run=dry_run)
             
     print(f"\n--- PUBLISHING FOR: {brand_name} ---")
     print(f"Date: {post['date']} | Slot: {post['slot']} | Platform: {post['platform']} | Pillar: {post['pillar']}")

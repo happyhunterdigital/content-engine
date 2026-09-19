@@ -33,7 +33,7 @@ jobs:
 
       - name: Install Python Dependencies & Playwright
         run: |
-          pip install requests openai playwright Pillow instagrapi
+          pip install requests openai playwright Pillow instagrapi tweepy
           playwright install chromium --with-deps
 
       - name: Run Schedule Publisher for ${{ matrix.brand }}
@@ -56,6 +56,10 @@ jobs:
           CLOUDINARY_UPLOAD_PRESET: ${{ secrets.CLOUDINARY_UPLOAD_PRESET }}
           LINKEDIN_ACCESS_TOKEN: ${{ secrets.LINKEDIN_ACCESS_TOKEN }}
           LINKEDIN_PERSON_URN: ${{ secrets.LINKEDIN_PERSON_URN }}
+          X_API_KEY: ${{ secrets.X_API_KEY }}
+          X_API_SECRET: ${{ secrets.X_API_SECRET }}
+          X_ACCESS_TOKEN: ${{ secrets.X_ACCESS_TOKEN }}
+          X_ACCESS_SECRET: ${{ secrets.X_ACCESS_SECRET }}
           INPUT_DATE: ${{ github.event.inputs.date }}
           INPUT_SLOT: ${{ github.event.inputs.slot }}
         run: |
