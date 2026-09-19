@@ -835,6 +835,9 @@ def main():
             if post.get("published"):
                 skipped_count += 1
                 continue
+            if not post.get("reviewed"):
+                skipped_count += 1
+                continue
             if post["date"] == target_date:
                 if args.slot != "all" and normalize_slot(post["slot"]) != normalize_slot(args.slot):
                     continue
