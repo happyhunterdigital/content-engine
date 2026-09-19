@@ -805,6 +805,16 @@ def publish_post(brand_name, post, dry_run=False):
             print(f"Failed to publish to Facebook. Status: {resp.status_code}, Details: {resp.text}")
             return False
 
+def save_schedules(schedules):
+    base_dir = os.path.dirname(os.path.abspath(__file__))
+    data_dir = os.path.join(os.path.dirname(base_dir), "data")
+    filenames = ["happy_hunter_schedule.json", "wellth_schedule.json", "ludo_league_schedule.json"]
+    for sched, fname in zip(schedules, filenames):
+        path = os.path.join(data_dir, fname)
+        if os.path.exists(path):
+            with open(path, "w", encoding="utf-8") as f:
+                json.dump(sched, f, indent=2, ensure_ascii=False)
+
 def main():
     args = parse_args()
     target_date = args.date or datetime.now(SAST).strftime("%Y-%m-%d")
@@ -812,7 +822,9 @@ def main():
     
     schedules = load_schedules()
     published_count = 0
+    skipped_count = 0
     failed_count = 0
+    schedule_dirty = False
     
     for brand_data in schedules:
         brand_name = brand_data["brand"]
@@ -820,16 +832,27 @@ def main():
             continue
             
         for post in brand_data.get("schedule", []):
+            if post.get("published"):
+                skipped_count += 1
+                continue
             if post["date"] == target_date:
                 if args.slot != "all" and normalize_slot(post["slot"]) != normalize_slot(args.slot):
                     continue
                 success = publish_post(brand_name, post, dry_run=args.dry_run)
                 if success:
                     published_count += 1
+                    if not args.dry_run:
+                        post["published"] = True
+                        post["published_at"] = datetime.now(SAST).isoformat()
+                        schedule_dirty = True
                 else:
                     failed_count += 1
                     
-    print(f"\nTotal posts matched and processed for {target_date}: {published_count} published, {failed_count} failed")
+    if schedule_dirty and not args.dry_run:
+        save_schedules(schedules)
+        print("Schedule updated with published markers.")
+                    
+    print(f"\nTotal posts matched and processed for {target_date}: {published_count} published, {skipped_count} skipped (already published), {failed_count} failed")
     
     if published_count == 0 and failed_count > 0:
         print("ERROR: All posts failed to publish")
