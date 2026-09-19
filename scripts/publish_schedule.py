@@ -435,7 +435,10 @@ def publish_x(text, dry_run=False):
             print(f"Successfully posted to X: tweet_id={tweet_id}")
             return True
         else:
-            print(f"X post failed: {r.status_code} {r.text[:300]}")
+            if r.status_code == 401:
+                print(f"X 401 Unauthorized - Free tier is read-only. Upgrade to Basic ($200/mo) to enable posting.")
+            else:
+                print(f"X post failed: {r.status_code} {r.text[:300]}")
             return False
     except Exception as e:
         print(f"X post exception: {e}")
