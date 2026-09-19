@@ -54,12 +54,19 @@ x_access = os.getenv("X_ACCESS_TOKEN")
 x_access_secret = os.getenv("X_ACCESS_SECRET")
 if all([x_api_key, x_api_secret, x_access, x_access_secret]):
     try:
-        from oauthlib.oauth1 import Client
-        client = Client(x_api_key, client_secret=x_api_secret, resource_owner_key=x_access, resource_owner_secret=x_access_secret)
-        uri, headers, body = client.sign("https://api.x.com/2/tweets", "POST", body='{"text": "Test post from content-engine - AI visibility audit live. Get your free scan: https://www.happyhunterdigital.com/audit"}', headers={"Content-Type": "application/json"})
+        from oauthlib.oauth1 import Client, SIGNATURE_HMAC_SHA1
         import requests
-        r = requests.post(uri, headers=headers, data=body)
-        print(f"X response: {r.status_code} {r.text.replace(chr(10), ' ')[:500]}")
+        # First test: verify credentials by reading /2/users/me
+        client = Client(x_api_key, client_secret=x_api_secret, resource_owner_key=x_access, resource_owner_secret=x_access_secret, signature_method=SIGNATURE_HMAC_SHA1)
+        uri, headers, body = client.sign("https://api.x.com/2/users/me", "GET")
+        r = requests.get(uri, headers=headers, timeout=30)
+        print(f"X verify: {r.status_code} {r.text.replace(chr(10), ' ')[:300]}")
+        # Then post
+        client2 = Client(x_api_key, client_secret=x_api_secret, resource_owner_key=x_access, resource_owner_secret=x_access_secret, signature_method=SIGNATURE_HMAC_SHA1)
+        body2 = '{"text": "Test post from content-engine - AI visibility audit live. Get your free scan: https://www.happyhunterdigital.com/audit"}'
+        uri2, headers2, body2 = client2.sign("https://api.x.com/2/tweets", "POST", body=body2, headers={"Content-Type": "application/json"})
+        r2 = requests.post(uri2, headers=headers2, data=body2.encode('utf-8'), timeout=30)
+        print(f"X tweet: {r2.status_code} {r2.text.replace(chr(10), ' ')[:300]}")
     except Exception as e:
         print(f"X exception: {e}")
 else:
