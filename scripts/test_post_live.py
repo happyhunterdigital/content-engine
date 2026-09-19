@@ -54,9 +54,11 @@ x_access = os.getenv("X_ACCESS_TOKEN")
 x_access_secret = os.getenv("X_ACCESS_SECRET")
 if all([x_api_key, x_api_secret, x_access, x_access_secret]):
     try:
-        from requests_oauthlib import OAuth1Session
-        oauth = OAuth1Session(x_api_key, client_secret=x_api_secret, resource_owner_key=x_access, resource_owner_secret=x_access_secret)
-        r = oauth.post("https://api.x.com/2/tweets", json={"text": "Test post from content-engine - AI visibility audit live. Get your free scan: https://www.happyhunterdigital.com/audit"})
+        from oauthlib.oauth1 import Client
+        client = Client(x_api_key, client_secret=x_api_secret, resource_owner_key=x_access, resource_owner_secret=x_access_secret)
+        uri, headers, body = client.sign("https://api.x.com/2/tweets", "POST", body='{"text": "Test post from content-engine - AI visibility audit live. Get your free scan: https://www.happyhunterdigital.com/audit"}', headers={"Content-Type": "application/json"})
+        import requests
+        r = requests.post(uri, headers=headers, data=body)
         print(f"X response: {r.status_code} {r.text.replace(chr(10), ' ')[:500]}")
     except Exception as e:
         print(f"X exception: {e}")
