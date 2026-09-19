@@ -54,19 +54,18 @@ x_access = os.getenv("X_ACCESS_TOKEN")
 x_access_secret = os.getenv("X_ACCESS_SECRET")
 if all([x_api_key, x_api_secret, x_access, x_access_secret]):
     try:
-        from oauthlib.oauth1 import Client, SIGNATURE_HMAC_SHA1
+        from requests_oauthlib import OAuth1Session
         import requests
-        # First test: verify credentials by reading /2/users/me
-        client = Client(x_api_key, client_secret=x_api_secret, resource_owner_key=x_access, resource_owner_secret=x_access_secret, signature_method=SIGNATURE_HMAC_SHA1)
-        uri, headers, body = client.sign("https://api.x.com/2/users/me", "GET")
-        r = requests.get(uri, headers=headers, timeout=30)
-        print(f"X verify: {r.status_code} {r.text.replace(chr(10), ' ')[:300]}")
-        # Then post
-        client2 = Client(x_api_key, client_secret=x_api_secret, resource_owner_key=x_access, resource_owner_secret=x_access_secret, signature_method=SIGNATURE_HMAC_SHA1)
-        body2 = '{"text": "Test post from content-engine - AI visibility audit live. Get your free scan: https://www.happyhunterdigital.com/audit"}'
-        uri2, headers2, body2 = client2.sign("https://api.x.com/2/tweets", "POST", body=body2, headers={"Content-Type": "application/json"})
-        r2 = requests.post(uri2, headers=headers2, data=body2.encode('utf-8'), timeout=30)
-        print(f"X tweet: {r2.status_code} {r2.text.replace(chr(10), ' ')[:300]}")
+        for host in ["https://api.twitter.com", "https://api.x.com"]:
+            try:
+                oauth = OAuth1Session(x_api_key, client_secret=x_api_secret, resource_owner_key=x_access, resource_owner_secret=x_access_secret)
+                r = oauth.get(f"{host}/2/users/me", timeout=15)
+                print(f"X verify {host}: {r.status_code} {r.text.replace(chr(10), ' ')[:300]}")
+                oauth2 = OAuth1Session(x_api_key, client_secret=x_api_secret, resource_owner_key=x_access, resource_owner_secret=x_access_secret)
+                r2 = oauth2.post(f"{host}/2/tweets", json={"text": "Test post from content-engine - AI visibility audit live. Get your free scan: https://www.happyhunterdigital.com/audit"}, timeout=15)
+                print(f"X tweet {host}: {r2.status_code} {r2.text.replace(chr(10), ' ')[:300]}")
+            except Exception as e2:
+                print(f"X {host} exception: {e2}")
     except Exception as e:
         print(f"X exception: {e}")
 else:
