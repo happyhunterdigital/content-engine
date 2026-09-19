@@ -652,7 +652,9 @@
         "#DigitalMarketing",
         "#SME",
         "#Checklist"
-      ]
+      ],
+      "published": true,
+      "published_at": "2026-09-19T10:32:00+02:00"
     },
     {
       "date": "2026-09-19",
@@ -671,7 +673,9 @@
         "#DigitalMarketing",
         "#AI",
         "#BusinessGrowth"
-      ]
+      ],
+      "published": true,
+      "published_at": "2026-09-19T10:32:00+02:00"
     },
     {
       "date": "2026-09-20",
