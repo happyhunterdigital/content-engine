@@ -820,21 +820,6 @@
       ]
     },
     {
-      "platform": "Facebook",
-      "pillar": "ACTIONABLE",
-      "format": "post",
-      "headline": "5-minute GEO fix: Add FAQ schema to your homepage.",
-      "body": "Most impactful 5 minutes you'll spend on your digital presence this week:\n\nAdd FAQ schema to your homepage.\n\nHere's how:\n1. Identify the 5 most common questions your customers ask\n2. Go to Google's Structured Data Markup Helper\n3. Mark up those 5 Q&As on your homepage\n4. Add the JSON-LD code to your site\n5. Test with Google's Rich Results Test\n\nWhy it matters:\n→ FAQ schema increases AI citation probability by 28-34%\n→ It helps AI assistants understand what you do and who you serve\n→ It takes 5 minutes, not 5 days\n\nThis is the single highest-ROI technical change you can make for GEO.\n\nNeed help? Our free scan shows you exactly what's missing: https://www.happyhunterdigital.com/audit",
-      "hashtags": [
-        "#GEO",
-        "#AISearch",
-        "#FAQSchema",
-        "#SouthAfrica",
-        "#DigitalMarketing",
-        "#TechnicalSEO"
-      ]
-    },
-    {
       "date": "2026-09-25",
       "day": "Thursday",
       "slot": "08:00",
@@ -921,7 +906,9 @@
         "#SouthAfrica",
         "#DigitalMarketing",
         "#MarketingIndustry"
-      ]
+      ],
+      "format": "post",
+      "headline": "The marketing industry profits from your ignorance about GEO"
     },
     {
       "date": "2026-09-29",
@@ -955,7 +942,9 @@
         "#SouthAfrica",
         "#DigitalMarketing",
         "#Sprint"
-      ]
+      ],
+      "format": "post",
+      "headline": "Before October hits, do these 3 things"
     },
     {
       "date": "2026-09-30",
