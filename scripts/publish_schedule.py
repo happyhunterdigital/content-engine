@@ -374,6 +374,46 @@ def verify_ig_id(ig_user_id, token):
         print(f"verify_ig_id exception: {e}")
     return None
 
+def publish_linkedin(text, dry_run=False):
+    """Publish a text post to LinkedIn using the Share on LinkedIn API."""
+    token = os.getenv("LINKEDIN_ACCESS_TOKEN")
+    person_urn = os.getenv("LINKEDIN_PERSON_URN")
+    if not token or not person_urn:
+        print("LinkedIn: missing LINKEDIN_ACCESS_TOKEN or LINKEDIN_PERSON_URN")
+        return False
+    if dry_run:
+        print(f"[Dry Run] Would post to LinkedIn: {text[:100]}...")
+        return True
+    url = "https://api.linkedin.com/v2/ugcPosts"
+    payload = {
+        "author": person_urn,
+        "lifecycleState": "PUBLISHED",
+        "specificContent": {
+            "com.linkedin.ugc.ShareContent": {
+                "shareCommentary": {"text": text},
+                "shareMediaCategory": "NONE"
+            }
+        },
+        "visibility": {"com.linkedin.ugc.MemberNetworkVisibility": "PUBLIC"}
+    }
+    headers = {
+        "Authorization": f"Bearer {token}",
+        "LinkedIn-Version": "202401",
+        "X-Restli-Protocol-Version": "2.0.0",
+        "Content-Type": "application/json"
+    }
+    try:
+        r = requests.post(url, json=payload, headers=headers, timeout=30)
+        if r.status_code == 201:
+            print(f"Successfully posted to LinkedIn: {r.json()}")
+            return True
+        else:
+            print(f"LinkedIn post failed: {r.status_code} {r.text[:500]}")
+            return False
+    except Exception as e:
+        print(f"LinkedIn exception: {e}")
+        return False
+
 def publish_instagram_private_api(slide_paths, caption, dry_run=False):
     """Publish carousel via instagrapi private API using IG_USERNAME/IG_PASSWORD (bypasses Graph App Review)."""
     ig_user = os.getenv("IG_USERNAME")
@@ -648,6 +688,14 @@ def publish_post(brand_name, post, dry_run=False):
                 return True
             write_instagram_pack(brand_name, post, slide_paths, caption_text, [])
             return True
+    
+    # LinkedIn routing
+    if platform.lower() == "linkedin":
+        print(f"\n--- LINKEDIN POST FOR: {brand_name} ---")
+        print(f"Date: {post['date']} | Slot: {post['slot']} | Pillar: {post['pillar']}")
+        linkedin_text = f"{post['headline']}\n\n{post['body']}\n\n{' '.join(post.get('hashtags', []))}"
+        print(f"Caption:\n{linkedin_text[:200]}...\n----------------------------------------")
+        return publish_linkedin(linkedin_text, dry_run=dry_run)
             
     print(f"\n--- PUBLISHING FOR: {brand_name} ---")
     print(f"Date: {post['date']} | Slot: {post['slot']} | Platform: {post['platform']} | Pillar: {post['pillar']}")
