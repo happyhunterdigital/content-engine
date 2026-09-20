@@ -1,0 +1,88 @@
+name: Morning Briefing — 07:00 SAST Email
+
+on:
+  schedule:
+    # 05:00 UTC = 07:00 SAST (runs before 06:00/11:00/16:00 publisher crons)
+    - cron: '0 5 * * *'
+  workflow_dispatch:
+    inputs:
+      date:
+        description: 'Date YYYY-MM-DD (default today SAST)'
+        required: false
+        default: ''
+
+permissions:
+  contents: read
+
+jobs:
+  briefing:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
+
+      - name: Setup Python
+        uses: actions/setup-python@v6
+        with:
+          python-version: '3.10'
+
+      - name: Generate briefing
+        id: gen
+        run: |
+          pip install requests >/dev/null 2>&1 || true
+          DATE_ARG=""
+          if [ -n "${{ github.event.inputs.date }}" ]; then
+            DATE_ARG="--date ${{ github.event.inputs.date }}"
+          fi
+          python scripts/morning_briefing.py $DATE_ARG --write | tee /tmp/briefing.txt
+          echo "BRIEF_DATE=$(date -d 'now +2 hours' +%Y-%m-%d)" >> $GITHUB_OUTPUT
+          # Capture subject counts
+          YEST=$(grep -c "Published" /tmp/briefing.txt || echo "0")
+          echo "has_brief=true" >> $GITHUB_OUTPUT
+
+      - name: Check mail secrets
+        id: check
+        run: |
+          if [ -z "${{ secrets.MAIL_HOST }}" ] || [ -z "${{ secrets.MAIL_USERNAME }}" ] || [ -z "${{ secrets.MAIL_PASSWORD }}" ]; then
+            echo "missing=true" >> $GITHUB_OUTPUT
+            echo "::warning::MAIL_HOST/MAIL_USERNAME/MAIL_PASSWORD not set — briefing generated but email skipped. Add them in repo Settings > Secrets > Actions."
+          else
+            echo "missing=false" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Send email via SMTP
+        if: steps.check.outputs.missing == 'false'
+        uses: dawidd6/action-send-mail@v3
+        with:
+          server_address: ${{ secrets.MAIL_HOST }}
+          server_port: ${{ secrets.MAIL_PORT || '587' }}
+          username: ${{ secrets.MAIL_USERNAME }}
+          password: ${{ secrets.MAIL_PASSWORD }}
+          subject: "Morning Briefing — ${{ steps.gen.outputs.BRIEF_DATE }} — Happy Hunter Digital"
+          to: ${{ secrets.MAIL_TO || 'motsumitl@happyhunterdigital.com' }}
+          from: ${{ secrets.MAIL_FROM || secrets.MAIL_USERNAME }}
+          html_body: file://output/morning-brief-${{ steps.gen.outputs.BRIEF_DATE }}.html
+          body: file://output/morning-brief-${{ steps.gen.outputs.BRIEF_DATE }}.md
+          convert_markdown: false
+          ignore_cert: true
+
+      - name: Upload briefing artifact (always — email fallback)
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: morning-brief-${{ steps.gen.outputs.BRIEF_DATE }}
+          path: |
+            output/morning-brief-*.md
+            output/morning-brief-*.html
+            /tmp/briefing.txt
+          if-no-files-found: warn
+          retention-days: 14
+
+      - name: Log briefing when email secrets missing
+        if: steps.check.outputs.missing == 'true'
+        run: |
+          echo "=== BRIEFING (email not sent — missing MAIL_* secrets) ==="
+          cat /tmp/briefing.txt
+          echo "=== To enable email: add MAIL_HOST, MAIL_PORT, MAIL_USERNAME, MAIL_PASSWORD, MAIL_TO, MAIL_FROM in https://github.com/happyhunterdigital/content-engine/settings/secrets/actions ==="
