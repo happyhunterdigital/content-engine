@@ -124,6 +124,21 @@ jobs:
           fi
           python scripts/publish_schedule.py "${ARGS[@]}"
 
+      - name: Commit published markers (if changed by publisher)
+        if: always()
+        run: |
+          if git diff --quiet data/happy_hunter_schedule.json data/wellth_schedule.json data/ludo_league_schedule.json 2>/dev/null; then
+            echo "No published markers to commit"
+          else
+            git config user.name "EA Publisher"
+            git config user.email "ea@happyhunterdigital.com"
+            git add data/happy_hunter_schedule.json data/wellth_schedule.json data/ludo_league_schedule.json 2>/dev/null || git add data/happy_hunter_schedule.json
+            # Pull rebase to avoid race between matrix jobs — first wins, others rebase
+            git pull --rebase origin main || true
+            git commit -m "chore: mark published for ${{ github.event.inputs.date || 'scheduled' }} [${{ matrix.brand }}]" || echo "Nothing to commit"
+            git push || (git pull --rebase origin main && git push) || echo "Push race — next cron will retry"
+          fi
+
       - name: Upload Instagram pack (backup for manual IG post)
         if: always()
         uses: actions/upload-artifact@v4
