@@ -1102,6 +1102,132 @@
         "#DigitalMarketing",
         "#MarketingIndustry"
       ]
+    },
+    {
+      "date": "2026-09-22",
+      "day": "Monday",
+      "slot": "12:00",
+      "platform": "TikTok",
+      "pillar": "AWARENESS",
+      "format": "video",
+      "headline": "Ask ChatGPT who is the best accountant in Sandton",
+      "body": "Screen record: Open ChatGPT. Type 'Who are the best accountants for SMEs in Sandton?'\nShow the 3 recommendations.\n\nText overlay: 'Notice something? The big firms are not here.'\n'These 3 have one thing in common: FAQ schema. AI-readable pages.'\n'The firm spending R50K on Google Ads? ChatGPT has never heard of them.'\n\nEnd screen: 'Is your business AI-visible? 90-second audit. Link in bio.'\n\n#GEO #AISearch #ChatGPT #SouthAfrica #DigitalMarketing #SME",
+      "hashtags": [
+        "#GEO",
+        "#AISearch",
+        "#ChatGPT",
+        "#SouthAfrica",
+        "#DigitalMarketing",
+        "#SME"
+      ]
+    },
+    {
+      "date": "2026-09-23",
+      "day": "Tuesday",
+      "slot": "12:00",
+      "platform": "TikTok",
+      "pillar": "ACTIONABLE",
+      "format": "video",
+      "headline": "Add FAQ schema to your homepage in 5 minutes",
+      "body": "Screen record: Google 'Structured Data Markup Helper'\nShow step 1: Select 'FAQ Page'\nShow step 2: Paste your homepage URL\nShow step 3: Add 5 questions and answers\nShow step 4: Copy the JSON-LD code\nShow step 5: Paste into your website HTML\n\nText overlay: '5 minutes. This increases AI citation probability by 28-34%.'\n'Your agency charges R50K for this.'\n\nEnd screen: 'Free audit to check what you are missing. Link in bio.'\n\n#GEO #FAQSchema #TechnicalSEO #SouthAfrica #DigitalMarketing #QuickFix",
+      "hashtags": [
+        "#GEO",
+        "#FAQSchema",
+        "#TechnicalSEO",
+        "#SouthAfrica",
+        "#DigitalMarketing",
+        "#QuickFix"
+      ]
+    },
+    {
+      "date": "2026-09-24",
+      "day": "Wednesday",
+      "slot": "12:00",
+      "platform": "TikTok",
+      "pillar": "AWARENESS",
+      "format": "video",
+      "headline": "Your Digital Survival Score in 90 seconds",
+      "body": "Screen record: Open happyhunterdigital.com/audit\nShow the scan running (90 seconds countdown)\nShow the result: Digital Survival Score\n\nText overlay: 'Most SA businesses score under 50 out of 100.'\n'That means AI search engines do not know you exist.'\n'Your competitors who fixed this are getting recommended. You are not.'\n\nEnd screen: 'Run yours. Free. No email. Link in bio.'\n\n#GEO #DigitalSurvivalScore #AIVisibility #SouthAfrica #DigitalMarketing #FreeAudit",
+      "hashtags": [
+        "#GEO",
+        "#DigitalSurvivalScore",
+        "#AIVisibility",
+        "#SouthAfrica",
+        "#DigitalMarketing",
+        "#FreeAudit"
+      ]
+    },
+    {
+      "date": "2026-09-25",
+      "day": "Thursday",
+      "slot": "12:00",
+      "platform": "TikTok",
+      "pillar": "AWARENESS",
+      "format": "video",
+      "headline": "Your marketing agency does not know about GEO",
+      "body": "Text on screen (no recording needed):\nFrame 1: 'Your marketing agency sold you Google Ads.'\nFrame 2: 'ChatGPT has never heard of your business.'\nFrame 3: 'Perplexity recommends your competitors.'\nFrame 4: 'GEO is the new frontier.'\nFrame 5: 'They do not know it yet.'\n\nAudio: dramatic trending sound\nText transition: fast cuts between frames\n\nEnd screen: 'Find out your score. Link in bio.'\n\n#GEO #MarketingAgency #AISearch #SouthAfrica #DigitalMarketing #BusinessGrowth",
+      "hashtags": [
+        "#GEO",
+        "#MarketingAgency",
+        "#AISearch",
+        "#SouthAfrica",
+        "#DigitalMarketing",
+        "#BusinessGrowth"
+      ]
+    },
+    {
+      "date": "2026-09-26",
+      "day": "Friday",
+      "slot": "12:00",
+      "platform": "TikTok",
+      "pillar": "EDUCATION",
+      "format": "video",
+      "headline": "Ranking #1 on Google means nothing to AI",
+      "body": "Screen record: Google 'best plumber in Pretoria'\nShow the #1 result\n\nThen open ChatGPT. Ask the same question.\nShow the result. The #1 Google result is NOT in the AI recommendation.\n\nText overlay: 'MYTH: Ranking #1 on Google means AI will find you.'\n'REALITY: 83% of AI citations come from pages OUTSIDE the top 10.'\n'Your SEO agency sold you the wrong game.'\n\nEnd screen: 'Get the real score. Link in bio.'\n\n#GEO #SEO #GoogleRanking #AISearch #SouthAfrica #MythBusted",
+      "hashtags": [
+        "#GEO",
+        "#SEO",
+        "#GoogleRanking",
+        "#AISearch",
+        "#SouthAfrica",
+        "#MythBusted"
+      ]
+    },
+    {
+      "date": "2026-09-27",
+      "day": "Saturday",
+      "slot": "12:00",
+      "platform": "TikTok",
+      "pillar": "AWARENESS",
+      "format": "video",
+      "headline": "AI is recommending your competitors right now",
+      "body": "Screen record: Ask Perplexity or ChatGPT about a common SA service\nShow the 3-5 recommendations\n\nText overlay: 'While you are reading this, AI is recommending businesses in your industry.'\n'The question is: are you one of them?'\n'87 out of 100 SA businesses are not.'\n\nEnd screen: 'Check your score. 90 seconds. Link in bio.'\n\n#GEO #CompetitorAudit #AISearch #SouthAfrica #DigitalMarketing #VisibilityCheck",
+      "hashtags": [
+        "#GEO",
+        "#CompetitorAudit",
+        "#AISearch",
+        "#SouthAfrica",
+        "#DigitalMarketing",
+        "#VisibilityCheck"
+      ]
+    },
+    {
+      "date": "2026-09-28",
+      "day": "Sunday",
+      "slot": "12:00",
+      "platform": "TikTok",
+      "pillar": "AWARENESS",
+      "format": "video",
+      "headline": "Load shedding is down. Your digital visibility should be up.",
+      "body": "Text on screen:\nFrame 1: 'Load shedding is down.'\nFrame 2: 'Your digital visibility should be up.'\nFrame 3: 'But 87 out of 100 SA businesses are invisible to AI.'\nFrame 4: 'The fix takes 90 seconds.'\nFrame 5: 'Free audit. No email. Link in bio.'\n\nAudio: mellow trending sound\nText transition: smooth fades\n\nEnd screen: 'happyhunterdigital.com/audit'\n\n#GEO #SouthAfrica #LoadShedding #AIVisibility #DigitalMarketing #SmallBusinessSA",
+      "hashtags": [
+        "#GEO",
+        "#SouthAfrica",
+        "#LoadShedding",
+        "#AIVisibility",
+        "#DigitalMarketing",
+        "#SmallBusinessSA"
+      ]
     }
   ]
 }
