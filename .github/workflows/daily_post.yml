@@ -54,7 +54,8 @@ jobs:
             git config user.email "ea@happyhunterdigital.com"
             git add data/happy_hunter_schedule.json
             git commit -m "chore: EA auto-review marks reviewed:true for $(date -u +%Y-%m-%d)"
-            git push
+            git pull --rebase origin main || true
+            git push || (git pull --rebase origin main && git push) || echo "Push race — next cron will retry"
           fi
 
   publish:
