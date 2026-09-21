@@ -526,6 +526,28 @@ def publish_instagram_carousel_graph(ig_user_id, token, slide_paths, caption):
     print(f"IG carousel publish failed after 5 attempts: container {cid} not ready")
     return False
 
+def publish_instagram_single_graph(ig_user_id, token, image_url, caption):
+    """Single-image Graph post — same path as test_post_live.py which returns 200."""
+    import time
+    r = requests.post(f"https://graph.facebook.com/v26.0/{ig_user_id}/media", data={"image_url": image_url, "caption": caption, "access_token": token}, timeout=60)
+    if r.status_code != 200:
+        print(f"IG single container failed: {r.text[:500]}")
+        return False
+    cid = r.json().get("id")
+    for attempt in range(5):
+        time.sleep(10)
+        r2 = requests.post(f"https://graph.facebook.com/v26.0/{ig_user_id}/media_publish", data={"creation_id": cid, "access_token": token}, timeout=60)
+        if r2.status_code == 200:
+            print(f"Successfully published Instagram SINGLE {cid} -> {r2.json()}")
+            return True
+        if "not ready" in r2.text.lower() or "not available" in r2.text.lower():
+            print(f"IG single publish attempt {attempt+1}: not ready, retrying...")
+            continue
+        print(f"IG single publish failed: {r2.text[:500]}")
+        return False
+    print(f"IG single publish failed after 5 attempts: {cid}")
+    return False
+
 def write_instagram_pack(brand_name, post, slide_paths, caption, hosted_urls=None):
     """Write Instagram manual pack: caption.txt, links.txt, hosted URLs. No IG API needed."""
     repo_root = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -691,7 +713,22 @@ def publish_post(brand_name, post, dry_run=False):
                         write_instagram_pack(brand_name, post, slide_paths, caption_text, hosted)
                     except: pass
                     return True
-                print("Graph publish failed, falling back to pack mode.")
+                print("Graph publish failed, trying single-image fallback (test-proven path).")
+            if ig_user_id and ig_token:
+                try:
+                    first_hosted = None
+                    if slide_paths:
+                        first_hosted = host_file_for_ig(slide_paths[0], "image")
+                    if first_hosted:
+                        print(f"IG single fallback with: {first_hosted}")
+                        if publish_instagram_single_graph(ig_user_id, ig_token, first_hosted, caption_text):
+                            try:
+                                write_instagram_pack(brand_name, post, slide_paths, caption_text, [first_hosted])
+                            except: pass
+                            return True
+                        print("IG single fallback failed, falling back to pack mode.")
+                except Exception as e:
+                    print(f"IG single fallback exception: {e}")
             # Host slides to Cloudinary (or catbox fallback) for public URLs
             hosted = []
             for p in slide_paths:
