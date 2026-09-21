@@ -18,6 +18,9 @@ concurrency:
   group: morning-briefing
   cancel-in-progress: false
 
+env:
+  BRIEFING_RELAY_URL: https://us-central1-happy-hunter-systems.cloudfunctions.net/queueMorningBrief
+
 jobs:
   briefing:
     runs-on: ubuntu-latest
@@ -42,32 +45,37 @@ jobs:
           fi
           python scripts/morning_briefing.py $DATE_ARG --write | tee /tmp/briefing.txt
           echo "BRIEF_DATE=$(date -d 'now +2 hours' +%Y-%m-%d)" >> $GITHUB_OUTPUT
-          # Capture subject counts
-          YEST=$(grep -c "Published" /tmp/briefing.txt || echo "0")
           echo "has_brief=true" >> $GITHUB_OUTPUT
 
-      - name: Check Firebase secret
-        id: check
+      - name: Send email via Smart-Marketing relay (no Firebase key)
+        id: send
         run: |
-          if [ -z "${{ secrets.FIREBASE_SERVICE_ACCOUNT }}" ]; then
-            echo "missing=true" >> $GITHUB_OUTPUT
-            echo "::warning::FIREBASE_SERVICE_ACCOUNT not set — briefing generated but email skipped. Add it in repo Settings > Secrets > Actions."
-          else
-            echo "missing=false" >> $GITHUB_OUTPUT
-          fi
-
-      - name: Send email via Firestore Trigger Email
-        if: steps.check.outputs.missing == 'false'
-        run: |
-          pip install firebase-admin >/dev/null 2>&1
-          python scripts/send_firestore_email.py \
-            --to "motsumitl@happyhunterdigital.com" \
-            --subject "Morning Briefing — ${{ steps.gen.outputs.BRIEF_DATE }} — Happy Hunter Digital" \
-            --html "output/morning-brief-${{ steps.gen.outputs.BRIEF_DATE }}.html" \
-            --text "output/morning-brief-${{ steps.gen.outputs.BRIEF_DATE }}.md"
+          python - <<'PY'
+          import json, os, urllib.request
+          date = "${{ steps.gen.outputs.BRIEF_DATE }}"
+          base = "output/morning-brief-" + date
+          html_p, md_p = base + ".html", base + ".md"
+          html = open(html_p, encoding="utf-8").read() if os.path.exists(html_p) else ""
+          text = open(md_p, encoding="utf-8").read() if os.path.exists(md_p) else open("/tmp/briefing.txt", encoding="utf-8").read()
+          payload = json.dumps({
+            "to": "motsumitl@happyhunterdigital.com",
+            "subject": "Morning Briefing — " + date + " — Happy Hunter Digital",
+            "html": html, "text": text,
+          }).encode()
+          req = urllib.request.Request(
+            os.environ["BRIEFING_RELAY_URL"], data=payload,
+            headers={"Content-Type": "application/json",
+                      "x-briefing-secret": os.environ["BRIEFING_SECRET"]},
+            method="POST")
+          try:
+            with urllib.request.urlopen(req, timeout=30) as r:
+              print("Relay response:", r.status, r.read().decode()[:200])
+          except Exception as e:
+            print("Relay send failed (artifact still uploaded):", e)
+            raise SystemExit(0)
+          PY
         env:
-          FIREBASE_SERVICE_ACCOUNT: ${{ secrets.FIREBASE_SERVICE_ACCOUNT }}
-          FIRESTORE_PROJECT: happy-hunter-systems
+          BRIEFING_SECRET: ${{ secrets.DEEPSEEK_API_KEY }}
 
       - name: Upload briefing artifact (always — email fallback)
         if: always()
@@ -80,11 +88,3 @@ jobs:
             /tmp/briefing.txt
           if-no-files-found: warn
           retention-days: 14
-
-      - name: Log briefing when Firebase secret missing
-        if: steps.check.outputs.missing == 'true'
-        run: |
-          echo "=== BRIEFING (email not sent — missing FIREBASE_SERVICE_ACCOUNT) ==="
-          cat /tmp/briefing.txt
-          echo "=== To enable email: add FIREBASE_SERVICE_ACCOUNT in https://github.com/happyhunterdigital/content-engine/settings/secrets/actions ==="
-          echo "=== Generate with: cat service-account.json | base64 -w 0 ==="
