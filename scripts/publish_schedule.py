@@ -79,7 +79,41 @@ def render_html_carousel_slides(body_text, brand_name):
         
         for idx, (title, content) in enumerate(parsed_slides, start=1):
             clean_content = html.escape(content.strip('"\''))
-            
+            disp_title = re.sub(r'(?i)^slide\s*\d+\s*', '', title).strip().rstrip(':')
+            disp_title_esc = html.escape(disp_title)
+            variant = "cover" if idx == 1 else ("closer" if idx == total_slides else "signal")
+            eyebrow = "HAPPY HUNTER DIGITAL • SMART MARKETING" if variant == "cover" else (
+                "THE FIX • 90 SECOND SCAN" if variant == "closer" else f"SIGNAL {idx:02d} / {total_slides:02d}")
+            foot_right = "SWIPE" if idx < total_slides else "LINK IN BIO"
+            if variant == "cover":
+                words = disp_title_esc.split()
+                half = max(1, (len(words) + 1) // 2)
+                cover_line1 = " ".join(words[:half])
+                cover_line2 = " ".join(words[half:])
+                cover_line2_html = f'<span class="gold">{cover_line2}</span>' if cover_line2 else ""
+                slide_inner = (
+                    f'<div class="eyebrow">{eyebrow}</div>'
+                    f'<div class="cover-title">{cover_line1}<br>{cover_line2_html}</div>'
+                    f'<div class="cover-rule"></div>'
+                    f'<div class="cover-sub">{clean_content}</div>'
+                    f'<div><span class="cta-chip">FREE SCAN • HAPPYHUNTERDIGITAL.COM/AUDIT</span></div>'
+                )
+            elif variant == "closer":
+                slide_inner = (
+                    f'<div class="closer-panel">'
+                    f'<div class="closer-kicker">{eyebrow}</div>'
+                    f'<div class="closer-title">{disp_title_esc}</div>'
+                    f'<div class="closer-sub">{clean_content}</div>'
+                    f'<div><span class="closer-url">HAPPYHUNTERDIGITAL.COM/AUDIT</span></div>'
+                    f'</div>'
+                )
+            else:
+                slide_inner = (
+                    f'<div class="bezel"><div class="bezel-inner">'
+                    f'<div class="signal-label">{eyebrow}</div>'
+                    f'<div class="signal-text">{clean_content}</div>'
+                    f'</div></div>'
+                )
             html_template = f"""<!DOCTYPE html>
 <html>
 <head>
@@ -94,11 +128,11 @@ def render_html_carousel_slides(body_text, brand_name):
       height: 1080px;
       background-color: #050505;
       color: #FFFFFF;
-      font-family: 'Inter', sans-serif;
+      font-family: 'Inter', Arial, sans-serif;
       display: flex;
       flex-direction: column;
       justify-content: space-between;
-      padding: 80px;
+      padding: 72px;
       position: relative;
       overflow: hidden;
     }}
@@ -106,10 +140,18 @@ def render_html_carousel_slides(body_text, brand_name):
       content: '';
       position: absolute;
       top: 0; left: 0; right: 0; bottom: 0;
-      background-size: 40px 40px;
-      background-image: 
-        linear-gradient(to right, rgba(234, 179, 8, 0.03) 1px, transparent 1px),
-        linear-gradient(to bottom, rgba(234, 179, 8, 0.03) 1px, transparent 1px);
+      background:
+        radial-gradient(700px 380px at 85% -5%, rgba(234, 179, 8, 0.07), transparent 65%),
+        radial-gradient(560px 420px at -10% 105%, rgba(234, 179, 8, 0.05), transparent 60%);
+      z-index: 1;
+    }}
+    body::after {{
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background-image: repeating-linear-gradient(115deg, rgba(234,179,8,0.045) 0 2px, transparent 2px 26px);
+      mask-image: linear-gradient(180deg, black 0%, transparent 34%);
+      -webkit-mask-image: linear-gradient(180deg, black 0%, transparent 34%);
       z-index: 1;
     }}
     .top-bar {{
@@ -117,8 +159,8 @@ def render_html_carousel_slides(body_text, brand_name):
       top: 0;
       left: 0;
       width: 100%;
-      height: 8px;
-      background: linear-gradient(90deg, #EF4444 0%, #EAB308 100%);
+      height: 6px;
+      background: #EAB308;
       z-index: 10;
     }}
     .header {{
@@ -130,85 +172,193 @@ def render_html_carousel_slides(body_text, brand_name):
     .brand-group {{
       display: flex;
       align-items: center;
-      gap: 20px;
+      gap: 18px;
     }}
     .logo {{
-      width: 75px;
-      height: 75px;
-      border-radius: 12px;
+      width: 84px;
+      height: 84px;
+      border-radius: 14px;
       border: 2px solid #EAB308;
       object-fit: cover;
     }}
+    .brand-lockup {{
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }}
     .brand-name {{
-      font-size: 24px;
+      font-size: 25px;
       font-weight: 800;
       letter-spacing: 2px;
-      color: #EAB308;
+      color: #FFFFFF;
       text-transform: uppercase;
     }}
-    .slide-badge {{
-      background: rgba(234, 179, 8, 0.12);
-      border: 1px solid #EAB308;
+    .brand-name b {{ color: #EAB308; font-weight: 800; }}
+    .brand-sub {{
+      font-size: 15px;
+      font-weight: 700;
+      letter-spacing: 4px;
       color: #EAB308;
+    }}
+    .eyebrow {{
+      display: inline-block;
+      font-family: monospace;
+      font-size: 17px;
+      font-weight: 700;
+      letter-spacing: 3px;
+      color: #EAB308;
+      text-transform: uppercase;
+      margin-bottom: 26px;
+    }}
+    .slide-badge {{
+      background: #EAB308;
+      color: #050505;
       padding: 10px 22px;
       border-radius: 20px;
       font-size: 20px;
-      font-weight: 700;
+      font-weight: 800;
       letter-spacing: 1px;
     }}
     .content {{
       z-index: 10;
-      margin-top: 30px;
-      margin-bottom: 30px;
+      margin-top: 24px;
+      margin-bottom: 24px;
       flex-grow: 1;
       display: flex;
       flex-direction: column;
       justify-content: center;
     }}
-    .slide-title {{
-      font-size: 46px;
+    .cover-title {{
+      font-size: 88px;
       font-weight: 900;
-      line-height: 1.25;
+      line-height: 1.04;
       color: #FFFFFF;
-      margin-bottom: 35px;
+      letter-spacing: -1.5px;
       text-transform: uppercase;
-      letter-spacing: -0.5px;
+      margin-bottom: 30px;
     }}
-    .slide-title span {{
-      color: #EAB308;
+    .cover-title .gold {{ color: #EAB308; }}
+    .cover-rule {{
+      width: 120px;
+      height: 8px;
+      background: #EAB308;
+      border-radius: 4px;
+      margin-bottom: 30px;
     }}
-    .slide-body {{
-      font-size: 32px;
+    .cover-sub {{
+      font-size: 30px;
       font-weight: 500;
-      line-height: 1.55;
-      color: #E2E8F0;
+      line-height: 1.5;
+      color: #9ca3af;
+      max-width: 880px;
       white-space: pre-line;
-      background: rgba(255, 255, 255, 0.02);
-      padding: 30px;
-      border-left: 4px solid #EAB308;
-      border-radius: 0 12px 12px 0;
+    }}
+    .cta-chip {{
+      display: inline-block;
+      margin-top: 34px;
+      background: #EAB308;
+      color: #050505;
+      font-size: 24px;
+      font-weight: 800;
+      letter-spacing: 1.5px;
+      padding: 18px 34px;
+      border-radius: 16px;
+    }}
+    .bezel {{
+      background: rgba(255,255,255,0.04);
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 32px;
+      padding: 12px;
+      z-index: 10;
+    }}
+    .bezel-inner {{
+      background: #0a0a0a;
+      border: 1px solid rgba(234,179,8,0.25);
+      border-radius: 22px;
+      padding: 48px 44px;
+      border-left: 8px solid #EAB308;
+    }}
+    .signal-label {{
+      font-family: monospace;
+      font-size: 18px;
+      font-weight: 700;
+      letter-spacing: 3px;
+      color: #EAB308;
+      margin-bottom: 22px;
+    }}
+    .signal-text {{
+      font-size: 54px;
+      font-weight: 800;
+      line-height: 1.22;
+      color: #FFFFFF;
+      letter-spacing: -0.5px;
+      white-space: pre-line;
+    }}
+    .signal-text .gold {{ color: #EAB308; }}
+    .closer-panel {{
+      background: #EAB308;
+      border-radius: 28px;
+      padding: 56px 52px;
+      z-index: 10;
+    }}
+    .closer-kicker {{
+      font-family: monospace;
+      font-size: 19px;
+      font-weight: 700;
+      letter-spacing: 3px;
+      color: #050505;
+      margin-bottom: 18px;
+    }}
+    .closer-title {{
+      font-size: 62px;
+      font-weight: 900;
+      line-height: 1.1;
+      color: #050505;
+      text-transform: uppercase;
+      letter-spacing: -1px;
+      margin-bottom: 20px;
+    }}
+    .closer-sub {{
+      font-size: 30px;
+      font-weight: 600;
+      line-height: 1.45;
+      color: #050505;
+      white-space: pre-line;
+    }}
+    .closer-url {{
+      display: inline-block;
+      margin-top: 26px;
+      background: #050505;
+      color: #EAB308;
+      font-size: 24px;
+      font-weight: 800;
+      letter-spacing: 1.5px;
+      padding: 16px 30px;
+      border-radius: 14px;
     }}
     .footer {{
       display: flex;
       align-items: center;
       justify-content: space-between;
-      border-top: 1px solid rgba(255, 255, 255, 0.12);
-      padding-top: 30px;
+      border-top: 1px solid rgba(234, 179, 8, 0.25);
+      padding-top: 26px;
       z-index: 10;
     }}
     .tagline {{
-      font-size: 18px;
+      font-size: 17px;
       font-weight: 700;
-      color: #94A3B8;
-      letter-spacing: 1.5px;
+      color: #9ca3af;
+      letter-spacing: 2px;
     }}
+    .tagline b {{ color: #EAB308; }}
     .swipe-prompt {{
-      font-size: 18px;
+      font-size: 19px;
       font-weight: 800;
-      color: #EAB308;
-      display: flex;
-      align-items: center;
-      gap: 8px;
+      color: #050505;
+      background: #EAB308;
+      padding: 10px 24px;
+      border-radius: 20px;
+      letter-spacing: 1.5px;
     }}
   </style>
 </head>
@@ -218,27 +368,36 @@ def render_html_carousel_slides(body_text, brand_name):
   <div class="header">
     <div class="brand-group">
       <img class="logo" src="{LOGO_URL}" alt="{brand_name}">
-      <div class="brand-name">{brand_name}</div>
+      <div class="brand-lockup">
+        <div class="brand-name">happy<b>hunter</b>digital</div>
+        <div class="brand-sub">SMART MARKETING</div>
+      </div>
     </div>
-    <div class="slide-badge">SLIDE {idx} / {total_slides}</div>
+    <div class="slide-badge">{idx} / {total_slides}</div>
   </div>
 
   <div class="content">
-    <div class="slide-title">{title}</div>
-    <div class="slide-body">{clean_content}</div>
+    {slide_inner}
   </div>
 
   <div class="footer">
-    <div class="tagline">DIGITAL ENTITY ARCHITECTURE • SOUTH AFRICA</div>
-    <div class="swipe-prompt">SWIPE ➔</div>
+    <div class="tagline">ENTITY-FIRST MARKETING • <b>WEB + GEO</b> • SOUTH AFRICA</div>
+    <div class="swipe-prompt">{foot_right}</div>
   </div>
 </body>
 </html>"""
             
             page.set_content(html_template, wait_until="networkidle")
-            path = os.path.abspath(f"output_slides/slide_{idx}.png")
-            page.screenshot(path=path)
-            slide_image_paths.append(path)
+            png_path = os.path.abspath(f"output_slides/slide_{idx}.png")
+            jpg_path = os.path.abspath(f"output_slides/slide_{idx}.jpg")
+            page.screenshot(path=png_path)
+            try:
+                from PIL import Image
+                Image.open(png_path).convert("RGB").save(jpg_path, "JPEG", quality=92)
+                slide_image_paths.append(jpg_path)
+            except Exception as e:
+                print(f"JPEG convert failed ({e}), using PNG")
+                slide_image_paths.append(png_path)
             
         browser.close()
         
@@ -613,10 +772,62 @@ def resolve_video_path(post):
             return os.path.abspath(alt)
     return None
 
+def crosspost_ig_to_fb_linkedin(brand_name, post, slide_paths, caption_text, dry_run=False):
+    """Founder rule: everything on Instagram must also go to Facebook + LinkedIn. Returns (fb_ok, li_ok)."""
+    if dry_run:
+        print("[Dry Run] Would cross-post IG content to Facebook + LinkedIn.")
+        return True, True
+    fb_ok, li_ok = False, False
+    if "Happy Hunter" in brand_name:
+        page_env = os.getenv("FB_PAGE_ID_HAPPYHUNTER")
+        token_env = os.getenv("FB_TOKEN_HAPPYHUNTER")
+    elif "Ludo" in brand_name:
+        page_env = os.getenv("FB_PAGE_ID_LUDOLEAGUE")
+        token_env = os.getenv("FB_TOKEN_LUDOLEAGUE")
+    else:
+        page_env = os.getenv("FB_PAGE_ID_IWS")
+        token_env = os.getenv("FB_TOKEN_IWS")
+    if page_env and token_env and slide_paths:
+        try:
+            media_fbids = []
+            for path in slide_paths:
+                with open(path, "rb") as img_file:
+                    resp = requests.post(f"https://graph.facebook.com/v26.0/{page_env}/photos",
+                                         data={"published": "false", "access_token": token_env},
+                                         files={"source": img_file}, timeout=60)
+                if resp.status_code == 200:
+                    media_fbids.append(resp.json().get("id"))
+                else:
+                    print(f"Cross-post FB slide upload failed: {resp.text[:300]}")
+            if media_fbids:
+                payload = {"message": caption_text, "access_token": token_env}
+                for idx, fbid in enumerate(media_fbids):
+                    payload[f"attached_media[{idx}]"] = json.dumps({"media_fbid": fbid})
+                resp = requests.post(f"https://graph.facebook.com/v26.0/{page_env}/feed", data=payload, timeout=30)
+                fb_ok = resp.status_code == 200
+                print(f"Cross-post Facebook: {'OK ' + resp.text[:200] if fb_ok else 'FAILED ' + resp.text[:300]}")
+            else:
+                resp = requests.post(f"https://graph.facebook.com/v26.0/{page_env}/feed",
+                                     data={"message": caption_text, "access_token": token_env}, timeout=30)
+                fb_ok = resp.status_code == 200
+                print(f"Cross-post Facebook text fallback: {'OK' if fb_ok else 'FAILED ' + resp.text[:300]}")
+        except Exception as e:
+            print(f"Cross-post Facebook exception: {e}")
+    else:
+        print("Cross-post Facebook skipped (no creds or no slides).")
+    li_ok = publish_linkedin(f"{post.get('headline','')}\n\n{caption_text}", dry_run=False)
+    print(f"Cross-post LinkedIn: {'OK' if li_ok else 'FAILED'}")
+    return fb_ok, li_ok
+
 def publish_post(brand_name, post, dry_run=False):
     format_type = post.get("format", "").lower()
     platform = post.get("platform", "")
-    
+
+    # Founder directive 2026-09-21: X and TikTok on hold. Do not publish, do not mark published.
+    if platform.lower() in ["x", "twitter", "tiktok"]:
+        print(f"PAUSED per founder (2026-09-21): {platform} post '{post.get('headline','')[:60]}' skipped, left unpublished.")
+        return False
+
     is_video = format_type in ["video", "reel"] or "[video]" in post.get("body", "").lower() or "[reel]" in post.get("body", "").lower()
     if is_video:
         caption_text = apply_lead_magnet(platform, f"{post['headline']}\n\n{post['body']}\n\n{' '.join(post.get('hashtags', []))}")
@@ -698,6 +909,7 @@ def publish_post(brand_name, post, dry_run=False):
                     try:
                         write_instagram_pack(brand_name, post, slide_paths, caption_text, [])
                     except: pass
+                    crosspost_ig_to_fb_linkedin(brand_name, post, slide_paths, caption_text)
                     return True
                 print("Private API failed, trying Graph...")
             ig_user_id, ig_token = get_ig_config(brand_name)
@@ -712,6 +924,7 @@ def publish_post(brand_name, post, dry_run=False):
                             hosted.append(u or "(local only)")
                         write_instagram_pack(brand_name, post, slide_paths, caption_text, hosted)
                     except: pass
+                    crosspost_ig_to_fb_linkedin(brand_name, post, slide_paths, caption_text)
                     return True
                 print("Graph publish failed, trying single-image fallback (test-proven path).")
             if ig_user_id and ig_token:
@@ -725,6 +938,7 @@ def publish_post(brand_name, post, dry_run=False):
                             try:
                                 write_instagram_pack(brand_name, post, slide_paths, caption_text, [first_hosted])
                             except: pass
+                            crosspost_ig_to_fb_linkedin(brand_name, post, slide_paths, caption_text)
                             return True
                         print("IG single fallback failed, falling back to pack mode.")
                 except Exception as e:
