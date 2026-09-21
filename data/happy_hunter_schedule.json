@@ -717,7 +717,9 @@
         "#SundayThought",
         "#BusinessGrowth"
       ],
-      "reviewed": true
+      "reviewed": true,
+      "published": true,
+      "published_at": "2026-09-21T14:13:04.965709+02:00"
     },
     {
       "date": "2026-09-22",
@@ -1051,7 +1053,9 @@
         "#DigitalMarketing",
         "#BusinessGrowth"
       ],
-      "reviewed": true
+      "reviewed": true,
+      "published": true,
+      "published_at": "2026-09-21T14:13:05.350518+02:00"
     },
     {
       "date": "2026-09-26",
