@@ -1139,8 +1139,7 @@
         "#SME"
       ],
       "reviewed": true,
-      "published": true,
-      "published_at": "2026-09-21T14:39:28.349996+02:00"
+      "published": null
     },
     {
       "date": "2026-09-23",
