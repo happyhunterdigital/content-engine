@@ -14,6 +14,10 @@ on:
 permissions:
   contents: read
 
+concurrency:
+  group: morning-briefing
+  cancel-in-progress: false
+
 jobs:
   briefing:
     runs-on: ubuntu-latest
@@ -42,31 +46,28 @@ jobs:
           YEST=$(grep -c "Published" /tmp/briefing.txt || echo "0")
           echo "has_brief=true" >> $GITHUB_OUTPUT
 
-      - name: Check mail secrets
+      - name: Check Firebase secret
         id: check
         run: |
-          if [ -z "${{ secrets.MAIL_HOST }}" ] || [ -z "${{ secrets.MAIL_USERNAME }}" ] || [ -z "${{ secrets.MAIL_PASSWORD }}" ]; then
+          if [ -z "${{ secrets.FIREBASE_SERVICE_ACCOUNT }}" ]; then
             echo "missing=true" >> $GITHUB_OUTPUT
-            echo "::warning::MAIL_HOST/MAIL_USERNAME/MAIL_PASSWORD not set — briefing generated but email skipped. Add them in repo Settings > Secrets > Actions."
+            echo "::warning::FIREBASE_SERVICE_ACCOUNT not set — briefing generated but email skipped. Add it in repo Settings > Secrets > Actions."
           else
             echo "missing=false" >> $GITHUB_OUTPUT
           fi
 
-      - name: Send email via SMTP
+      - name: Send email via Firestore Trigger Email
         if: steps.check.outputs.missing == 'false'
-        uses: dawidd6/action-send-mail@v3
-        with:
-          server_address: ${{ secrets.MAIL_HOST }}
-          server_port: ${{ secrets.MAIL_PORT || '587' }}
-          username: ${{ secrets.MAIL_USERNAME }}
-          password: ${{ secrets.MAIL_PASSWORD }}
-          subject: "Morning Briefing — ${{ steps.gen.outputs.BRIEF_DATE }} — Happy Hunter Digital"
-          to: ${{ secrets.MAIL_TO || 'motsumitl@happyhunterdigital.com' }}
-          from: ${{ secrets.MAIL_FROM || secrets.MAIL_USERNAME }}
-          html_body: file://output/morning-brief-${{ steps.gen.outputs.BRIEF_DATE }}.html
-          body: file://output/morning-brief-${{ steps.gen.outputs.BRIEF_DATE }}.md
-          convert_markdown: false
-          ignore_cert: true
+        run: |
+          pip install firebase-admin >/dev/null 2>&1
+          python scripts/send_firestore_email.py \
+            --to "motsumitl@happyhunterdigital.com" \
+            --subject "Morning Briefing — ${{ steps.gen.outputs.BRIEF_DATE }} — Happy Hunter Digital" \
+            --html "output/morning-brief-${{ steps.gen.outputs.BRIEF_DATE }}.html" \
+            --text "output/morning-brief-${{ steps.gen.outputs.BRIEF_DATE }}.md"
+        env:
+          FIREBASE_SERVICE_ACCOUNT: ${{ secrets.FIREBASE_SERVICE_ACCOUNT }}
+          FIRESTORE_PROJECT: happy-hunter-systems
 
       - name: Upload briefing artifact (always — email fallback)
         if: always()
@@ -80,9 +81,10 @@ jobs:
           if-no-files-found: warn
           retention-days: 14
 
-      - name: Log briefing when email secrets missing
+      - name: Log briefing when Firebase secret missing
         if: steps.check.outputs.missing == 'true'
         run: |
-          echo "=== BRIEFING (email not sent — missing MAIL_* secrets) ==="
+          echo "=== BRIEFING (email not sent — missing FIREBASE_SERVICE_ACCOUNT) ==="
           cat /tmp/briefing.txt
-          echo "=== To enable email: add MAIL_HOST, MAIL_PORT, MAIL_USERNAME, MAIL_PASSWORD, MAIL_TO, MAIL_FROM in https://github.com/happyhunterdigital/content-engine/settings/secrets/actions ==="
+          echo "=== To enable email: add FIREBASE_SERVICE_ACCOUNT in https://github.com/happyhunterdigital/content-engine/settings/secrets/actions ==="
+          echo "=== Generate with: cat service-account.json | base64 -w 0 ==="

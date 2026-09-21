@@ -18,6 +18,10 @@ on:
 permissions:
   contents: write
 
+concurrency:
+  group: publisher-${{ github.event.inputs.slot || 'cron' }}
+  cancel-in-progress: false
+
 jobs:
   ea_review:
     runs-on: ubuntu-latest
