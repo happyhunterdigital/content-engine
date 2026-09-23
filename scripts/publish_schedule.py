@@ -96,7 +96,7 @@ def render_html_carousel_slides(body_text, brand_name):
                     f'<div class="cover-title">{cover_line1}<br>{cover_line2_html}</div>'
                     f'<div class="cover-rule"></div>'
                     f'<div class="cover-sub">{clean_content}</div>'
-                    f'<div><span class="cta-chip">FREE SCAN • HAPPYHUNTERDIGITAL.COM/AUDIT</span></div>'
+                    f'<div><span class="cta-chip">COMMENT AUDIT, I WILL DM YOU THE LINK</span></div>'
                 )
             elif variant == "closer":
                 slide_inner = (
@@ -104,7 +104,7 @@ def render_html_carousel_slides(body_text, brand_name):
                     f'<div class="closer-kicker">{eyebrow}</div>'
                     f'<div class="closer-title">{disp_title_esc}</div>'
                     f'<div class="closer-sub">{clean_content}</div>'
-                    f'<div><span class="closer-url">HAPPYHUNTERDIGITAL.COM/AUDIT</span></div>'
+                    f'<div><span class="closer-url">COMMENT AUDIT FOR INSTANT ACCESS</span></div>'
                     f'</div>'
                 )
             else:
@@ -404,8 +404,8 @@ def render_html_carousel_slides(body_text, brand_name):
     return slide_image_paths, caption
 
 CAROUSEL_CTAS = {
-    "instagram": "Get your free AI visibility audit — link in bio.",
-    "tiktok": "Get your free AI visibility audit — link in bio.",
+    "instagram": "Comment AUDIT and I will DM you the free AI visibility audit. Link in bio also works.",
+    "tiktok": "Comment AUDIT and I will DM you the free AI visibility audit. Link in bio also works.",
     "facebook": "Get your free AI visibility audit: https://www.happyhunterdigital.com/audit",
     "x": "Get your free AI visibility audit: https://www.happyhunterdigital.com/audit",
     "linkedin": "Get your free AI visibility audit: https://www.happyhunterdigital.com/audit",
@@ -422,6 +422,10 @@ def apply_lead_magnet(platform, text):
     # Fallback: make sure it ends with a CTA if not present
     if "happyhunterdigital.com" not in text.lower() and "bio" not in text.lower():
         text = text.strip() + "\n\n" + cta
+    # SmartReply: Instagram needs a comment keyword, not just link in bio.
+    # If IG text lacks a keyword trigger, append it so comment-to-DM can fire.
+    if platform in ("instagram", "tiktok") and "comment audit" not in text.lower():
+        text = text.strip() + "\n\nComment AUDIT and I will DM you the link."
     return text
 
 OPENMONTAGE_HANDOFF_DIR = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "..", "OpenMontage", "projects")

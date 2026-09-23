@@ -216,8 +216,8 @@ def main():
 
         # CTA check (warn)
         body = post.get("body","").lower()
-        if "happyhunterdigital.com/audit" not in body and "link in bio" not in body and "link in comments" not in body:
-            print("  WARN: no audit CTA detected (happyhunterdigital.com/audit or link in bio)")
+        if "happyhunterdigital.com/audit" not in body and "link in bio" not in body and "link in comments" not in body and "comment audit" not in body:
+            print("  WARN: no audit CTA detected (happyhunterdigital.com/audit or link in bio or Comment AUDIT)")
 
         # All checks passed -> mark reviewed
         if not args.dry_run:
