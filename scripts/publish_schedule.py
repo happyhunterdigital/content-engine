@@ -654,8 +654,24 @@ def publish_instagram_private_api(slide_paths, caption, dry_run=False):
 
 def publish_instagram_carousel_graph(ig_user_id, token, slide_paths, caption):
     verify_ig_id(ig_user_id, token)
-    hosted = []
+    # Root fix 2026-09-24: Meta rejects PNG carousel items from runner IPs (9004).
+    # Force every slide to JPEG before hosting — Meta accepts JPG carousel items.
+    jpg_paths = []
     for p in slide_paths:
+        if str(p).lower().endswith(".jpg") or str(p).lower().endswith(".jpeg"):
+            jpg_paths.append(p)
+            continue
+        try:
+            from PIL import Image
+            jpg_p = os.path.splitext(p)[0] + ".jpg"
+            Image.open(p).convert("RGB").save(jpg_p, "JPEG", quality=92)
+            print(f"Carousel JPG convert: {p} -> {jpg_p}")
+            jpg_paths.append(jpg_p)
+        except Exception as e:
+            print(f"Carousel JPG convert failed for {p} ({e}), using original")
+            jpg_paths.append(p)
+    hosted = []
+    for p in jpg_paths:
         url = host_file_for_ig(p, "image")
         if not url:
             print(f"Failed to host {p} for IG Graph")
