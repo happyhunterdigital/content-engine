@@ -656,15 +656,18 @@ def publish_instagram_carousel_graph(ig_user_id, token, slide_paths, caption):
     verify_ig_id(ig_user_id, token)
     # Root fix 2026-09-24: Meta rejects PNG carousel items from runner IPs (9004).
     # Force every slide to JPEG before hosting — Meta accepts JPG carousel items.
+    # Update 2026-09-24 eve: JPG alone did NOT fix it (6x JPG items still 9004
+    # while single JPG works). Second hypothesis: child-fetch timeout on large
+    # files — recompress to quality 70 to shrink payload before upload.
     jpg_paths = []
     for p in slide_paths:
-        if str(p).lower().endswith(".jpg") or str(p).lower().endswith(".jpeg"):
-            jpg_paths.append(p)
-            continue
         try:
             from PIL import Image
+            img = Image.open(p).convert("RGB")
+            if max(img.size) > 1080:
+                img.thumbnail((1080, 1080), Image.LANCZOS)
             jpg_p = os.path.splitext(p)[0] + ".jpg"
-            Image.open(p).convert("RGB").save(jpg_p, "JPEG", quality=92)
+            img.save(jpg_p, "JPEG", quality=70, optimize=True)
             print(f"Carousel JPG convert: {p} -> {jpg_p}")
             jpg_paths.append(jpg_p)
         except Exception as e:
