@@ -823,7 +823,9 @@
         "#DigitalMarketing",
         "#SME"
       ],
-      "reviewed": true
+      "reviewed": true,
+      "published": true,
+      "published_at": "2026-09-24T21:52:20.629836+02:00"
     },
     {
       "date": "2026-09-24",
@@ -843,7 +845,9 @@
         "#Scorecard",
         "#SME"
       ],
-      "reviewed": true
+      "reviewed": true,
+      "published": true,
+      "published_at": "2026-09-24T21:53:48.019976+02:00"
     },
     {
       "date": "2026-09-25",
