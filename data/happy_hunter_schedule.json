@@ -984,7 +984,9 @@
         "#DigitalMarketing",
         "#TechnicalSEO"
       ],
-      "reviewed": true
+      "reviewed": true,
+      "published": true,
+      "published_at": "2026-09-25T21:54:31.751117+02:00"
     },
     {
       "date": "2026-09-25",
@@ -1022,7 +1024,9 @@
         "#BusinessGrowth",
         "#AIVisibility"
       ],
-      "reviewed": true
+      "reviewed": true,
+      "published": true,
+      "published_at": "2026-09-25T21:54:35.412409+02:00"
     },
     {
       "date": "2026-09-26",
