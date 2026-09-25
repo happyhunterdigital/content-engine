@@ -1,6 +1,24 @@
 import os, requests, json
 from datetime import datetime
 
+def fb_post_insights(post_id, token):
+    """Engagement per FB page post. Needs read_insights on the token."""
+    try:
+        r = requests.get(f"https://graph.facebook.com/v26.0/{post_id}/insights",
+                         params={"metric": "post_impressions,post_impressions_unique,post_engaged_users,post_clicks",
+                                 "access_token": token}, timeout=20)
+        if r.status_code == 200:
+            out = []
+            for m in r.json().get("data", []):
+                vals = m.get("values", [])
+                v = vals[0].get("value") if vals else None
+                out.append(f"{m.get('name')}={v}")
+            print(f"    ENGAGE [{post_id}]: " + (" | ".join(out) if out else "no rows"))
+        else:
+            print(f"    ENGAGE [{post_id}]: BLOCKED {r.status_code} {r.text[:220]}")
+    except Exception as e:
+        print(f"    ENGAGE [{post_id}]: exception {e}")
+
 def check(brand, page_id, token):
     if not page_id or not token:
         print(f"{brand}: missing page_id or token")
@@ -16,12 +34,31 @@ def check(brand, page_id, token):
             for p in data[:3]:
                 msg = (p.get("message") or "")[:120].replace("\n"," / ")
                 print(f"{p.get('created_time')} | {p.get('id')} | {msg}")
+                fb_post_insights(p.get("id"), token)
             if not data:
                 print("No posts returned (maybe token lacks pages_read_engagement)")
         else:
             print(r.text[:500])
     except Exception as e:
         print(f"FB check exception: {e}")
+
+def ig_media_insights(media_id, token):
+    """Engagement per IG media. Needs instagram_manage_insights + business account."""
+    try:
+        r = requests.get(f"https://graph.facebook.com/v26.0/{media_id}/insights",
+                         params={"metric": "impressions,reach,likes,comments,saved,shares",
+                                 "access_token": token}, timeout=20)
+        if r.status_code == 200:
+            out = []
+            for m in r.json().get("data", []):
+                vals = m.get("values", [])
+                v = vals[0].get("value") if vals else None
+                out.append(f"{m.get('name')}={v}")
+            print(f"    ENGAGE [{media_id}]: " + (" | ".join(out) if out else "no rows"))
+        else:
+            print(f"    ENGAGE [{media_id}]: BLOCKED {r.status_code} {r.text[:220]}")
+    except Exception as e:
+        print(f"    ENGAGE [{media_id}]: exception {e}")
 
 def check_ig(ig_id, token):
     if not ig_id or not token:
@@ -38,6 +75,7 @@ def check_ig(ig_id, token):
             for m in data[:3]:
                 cap = (m.get("caption") or "")[:100].replace("\n"," / ")
                 print(f"{m.get('timestamp')} | {m.get('id')} | {m.get('media_type')} | {cap}")
+                ig_media_insights(m.get("id"), token)
             if not data:
                 print("No IG media returned")
         else:
