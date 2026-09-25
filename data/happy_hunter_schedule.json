@@ -1287,6 +1287,43 @@
     {
       "date": "2026-10-01",
       "day": "Thursday",
+      "slot": "08:00",
+      "platform": "Facebook",
+      "pillar": "AWARENESS",
+      "format": "post",
+      "headline": "Good morning. Your shop photo is from 2019.",
+      "body": "Open your Google profile on your phone right now. Look at the photos. If the newest one is years old, customers are meeting a stranger.\n\nTake five fresh ones today: shopfront, inside, team at work, finished job, happy handover. Upload before lunch. Free, and it changes the first impression completely.\n\nLink in comments for the photo checklist.",
+      "hashtags": [
+        "#GBP",
+        "#SouthAfrica",
+        "#SME",
+        "#Pretoria",
+        "#SmallBusiness"
+      ],
+      "reviewed": true,
+      "published": null
+    },
+    {
+      "date": "2026-10-01",
+      "day": "Thursday",
+      "slot": "08:00",
+      "platform": "Instagram",
+      "pillar": "AWARENESS",
+      "format": "carousel",
+      "headline": "YOUR PROFILE IS YOUR STOREFRONT",
+      "body": "SLIDE 1: YOUR PROFILE IS YOUR STOREFRONT\n\nCaption: Customers decide from your Google profile before your website loads. Category right, photos fresh, hours honest. Save this. Link in bio.",
+      "hashtags": [
+        "#GBP",
+        "#LocalSEO",
+        "#SouthAfrica",
+        "#SME"
+      ],
+      "reviewed": true,
+      "published": null
+    },
+    {
+      "date": "2026-10-01",
+      "day": "Thursday",
       "slot": "12:30",
       "platform": "Instagram",
       "pillar": "AWARENESS",
@@ -1300,6 +1337,42 @@
         "#SME",
         "#GoogleBusiness",
         "#LeadGeneration"
+      ],
+      "reviewed": true,
+      "published": null
+    },
+    {
+      "date": "2026-10-01",
+      "day": "Thursday",
+      "slot": "12:30",
+      "platform": "LinkedIn",
+      "pillar": "AWARENESS",
+      "format": "post",
+      "headline": "The category field decides who gets the call.",
+      "body": "Your Google Business Profile has one primary category. Plumber, accounting firm, guest house. Get it wrong and Google recommends someone else for your own trade.\n\nCheck it today: open your profile, confirm the category matches what you actually sell, add one secondary only if true. Two minutes, permanent effect.\n\nLink in comments for the full profile checklist.",
+      "hashtags": [
+        "#GBP",
+        "#LocalSEO",
+        "#B2B",
+        "#SouthAfrica"
+      ],
+      "reviewed": true,
+      "published": null
+    },
+    {
+      "date": "2026-10-01",
+      "day": "Thursday",
+      "slot": "12:30",
+      "platform": "Facebook",
+      "pillar": "AWARENESS",
+      "format": "post",
+      "headline": "Lunch break task: fix your business category.",
+      "body": "One field, two minutes. Open your Google Business Profile, check the primary category. If it says something close but wrong, fix it now.\n\nA guest house listed as a hotel gets the wrong guests. An electrician listed under general contractor loses the exact search. Precision here is free marketing.\n\nLink in comments, full profile guide there.",
+      "hashtags": [
+        "#GBP",
+        "#LocalSEO",
+        "#SouthAfrica",
+        "#SME"
       ],
       "reviewed": true,
       "published": null
@@ -1324,6 +1397,42 @@
       "published": null
     },
     {
+      "date": "2026-10-01",
+      "day": "Thursday",
+      "slot": "17:00",
+      "platform": "LinkedIn",
+      "pillar": "AWARENESS",
+      "format": "post",
+      "headline": "A client found us on Maps. Never visited our site.",
+      "body": "True story from last month. A Pretoria business owner needed visibility help, searched on Maps, called from the profile directly. First time they saw our website was after signing.\n\nYour profile is not a directory listing. It is a storefront with a call button. Treat it like one: photos current, hours honest, reviews answered.\n\nLink in comments.",
+      "hashtags": [
+        "#GBP",
+        "#LeadGeneration",
+        "#B2B",
+        "#SouthAfrica"
+      ],
+      "reviewed": true,
+      "published": null
+    },
+    {
+      "date": "2026-10-01",
+      "day": "Thursday",
+      "slot": "17:00",
+      "platform": "Instagram",
+      "pillar": "AWARENESS",
+      "format": "carousel",
+      "headline": "PHOTOS THAT BRING CALLS",
+      "body": "SLIDE 1: PHOTOS THAT BRING CALLS\n\nCaption: Five current photos beat fifty stock ones. Shopfront, inside, team, work done, handover. Upload tonight. Link in bio. Comment AUDIT and I will DM you the link.",
+      "hashtags": [
+        "#GBP",
+        "#SouthAfrica",
+        "#SME",
+        "#GoogleBusiness"
+      ],
+      "reviewed": true,
+      "published": null
+    },
+    {
       "date": "2026-10-02",
       "day": "Friday",
       "slot": "08:00",
@@ -1338,6 +1447,43 @@
         "#GEO",
         "#SouthAfrica",
         "#WebDevelopment"
+      ],
+      "reviewed": true,
+      "published": null
+    },
+    {
+      "date": "2026-10-02",
+      "day": "Friday",
+      "slot": "08:00",
+      "platform": "Facebook",
+      "pillar": "AWARENESS",
+      "format": "post",
+      "headline": "Friday test: ask ChatGPT about your trade.",
+      "body": "Open ChatGPT, free tier is fine. Ask: who is the best plumber in Randburg, or your trade in your suburb. Read the names.\n\nIf you are not there, that is your weekend reading sorted. The fix starts with structured data, not ads.\n\nTry it now, tell me what you see in the comments. Link in comments for what to do next.",
+      "hashtags": [
+        "#AISearch",
+        "#GEO",
+        "#SouthAfrica",
+        "#SME",
+        "#Randburg"
+      ],
+      "reviewed": true,
+      "published": null
+    },
+    {
+      "date": "2026-10-02",
+      "day": "Friday",
+      "slot": "08:00",
+      "platform": "Instagram",
+      "pillar": "AWARENESS",
+      "format": "carousel",
+      "headline": "ASK AI ABOUT YOURSELF",
+      "body": "SLIDE 1: ASK AI ABOUT YOURSELF\n\nCaption: Friday habit. Ask ChatGPT for your trade in your suburb. Screenshot the answer. That screenshot is your marketing plan. Link in bio.",
+      "hashtags": [
+        "#AISearch",
+        "#GEO",
+        "#SouthAfrica",
+        "#SME"
       ],
       "reviewed": true,
       "published": null
@@ -1365,6 +1511,42 @@
     {
       "date": "2026-10-02",
       "day": "Friday",
+      "slot": "12:30",
+      "platform": "LinkedIn",
+      "pillar": "AWARENESS",
+      "format": "post",
+      "headline": "View-source is the cheapest audit in marketing.",
+      "body": "No tools, no logins, no fees. Right click, view source, search ld+json. Thirty seconds tells you whether machines can parse your business.\n\nIf the search finds nothing, your site is a beautiful brochure in a locked room. FAQ schema is the key, and any developer can add it in an afternoon.\n\nLink in comments for the exact markup to ask for.",
+      "hashtags": [
+        "#SEO",
+        "#WebDevelopment",
+        "#B2B",
+        "#SouthAfrica"
+      ],
+      "reviewed": true,
+      "published": null
+    },
+    {
+      "date": "2026-10-02",
+      "day": "Friday",
+      "slot": "12:30",
+      "platform": "Facebook",
+      "pillar": "AWARENESS",
+      "format": "post",
+      "headline": "Your FAQs already exist. They are in your inbox.",
+      "body": "Sent folder, WhatsApp history, quote requests. The same five questions, asked weekly, answered from memory every time.\n\nCopy them onto one page, answer each fully, and you have done half of SEO and most of AI readiness in one sitting.\n\nDo it this weekend. Link in comments for the template.",
+      "hashtags": [
+        "#ContentMarketing",
+        "#SEO",
+        "#SouthAfrica",
+        "#SME"
+      ],
+      "reviewed": true,
+      "published": null
+    },
+    {
+      "date": "2026-10-02",
+      "day": "Friday",
       "slot": "17:00",
       "platform": "Facebook",
       "pillar": "AWARENESS",
@@ -1382,6 +1564,42 @@
       "published": null
     },
     {
+      "date": "2026-10-02",
+      "day": "Friday",
+      "slot": "17:00",
+      "platform": "LinkedIn",
+      "pillar": "AWARENESS",
+      "format": "post",
+      "headline": "We quote schema work by the hour, not the mystery.",
+      "body": "A proper FAQ schema job is a few hours: read the real customer questions, write straight answers, mark up, test in Rich Results. That is it. Anyone selling it as a monthly black box is selling fog.\n\nAsk your developer for itemised schema work. If they cannot explain ld+json in plain words, get a second quote.\n\nLink in comments.",
+      "hashtags": [
+        "#SEO",
+        "#Transparency",
+        "#B2B",
+        "#SouthAfrica"
+      ],
+      "reviewed": true,
+      "published": null
+    },
+    {
+      "date": "2026-10-02",
+      "day": "Friday",
+      "slot": "17:00",
+      "platform": "Instagram",
+      "pillar": "AWARENESS",
+      "format": "carousel",
+      "headline": "WEEKEND HOMEWORK: 5 FAQS",
+      "body": "SLIDE 1: WEEKEND HOMEWORK: 5 FAQS\n\nCaption: Five questions, five honest answers, one page. Publish Monday. Watch what happens over ninety days. Save this. Link in bio. Comment AUDIT and I will DM you the link.",
+      "hashtags": [
+        "#ContentMarketing",
+        "#SEO",
+        "#SouthAfrica",
+        "#SME"
+      ],
+      "reviewed": true,
+      "published": null
+    },
+    {
       "date": "2026-10-03",
       "day": "Saturday",
       "slot": "08:00",
@@ -1394,6 +1612,43 @@
         "#WebDevelopment",
         "#PageSpeed",
         "#GEO",
+        "#SouthAfrica",
+        "#SME"
+      ],
+      "reviewed": true,
+      "published": null
+    },
+    {
+      "date": "2026-10-03",
+      "day": "Saturday",
+      "slot": "08:00",
+      "platform": "Facebook",
+      "pillar": "AWARENESS",
+      "format": "post",
+      "headline": "Saturday site check. Three numbers.",
+      "body": "Load time under three seconds. One H1 per page. Schema present. That is the whole Saturday check.\n\nTest speed free on PageSpeed Insights. View source for ld+json. Count your H1s. Ten minutes, honest answers.\n\nPost your load time in the comments, fastest one gets bragging rights. Link in comments for the guide.",
+      "hashtags": [
+        "#WebDevelopment",
+        "#PageSpeed",
+        "#SouthAfrica",
+        "#SME",
+        "#FreeTools"
+      ],
+      "reviewed": true,
+      "published": null
+    },
+    {
+      "date": "2026-10-03",
+      "day": "Saturday",
+      "slot": "08:00",
+      "platform": "Instagram",
+      "pillar": "AWARENESS",
+      "format": "carousel",
+      "headline": "3 NUMBERS, 10 MINUTES",
+      "body": "SLIDE 1: 3 NUMBERS, 10 MINUTES\n\nCaption: Load time, H1 count, schema present. Saturday check, honest answers, Monday fixes. Save this. Link in bio.",
+      "hashtags": [
+        "#WebDevelopment",
+        "#SEO",
         "#SouthAfrica",
         "#SME"
       ],
@@ -1422,6 +1677,42 @@
     {
       "date": "2026-10-03",
       "day": "Saturday",
+      "slot": "12:30",
+      "platform": "LinkedIn",
+      "pillar": "AWARENESS",
+      "format": "post",
+      "headline": "A rebuild is rarely the answer. Structure usually is.",
+      "body": "Most slow SME sites do not need a new website. They need compressed images, one heading hierarchy, and schema on service pages. A weekend of discipline beats a month of redesign.\n\nBefore anyone quotes you a rebuild, ask what is slow in numbers. Then fix the numbers.\n\nLink in comments for the three-measure check.",
+      "hashtags": [
+        "#WebDevelopment",
+        "#PageSpeed",
+        "#B2B",
+        "#SouthAfrica"
+      ],
+      "reviewed": true,
+      "published": null
+    },
+    {
+      "date": "2026-10-03",
+      "day": "Saturday",
+      "slot": "12:30",
+      "platform": "Facebook",
+      "pillar": "AWARENESS",
+      "format": "post",
+      "headline": "One H1. That is the rule.",
+      "body": "Open your homepage. Count the biggest headings. If there are three H1s fighting, search engines hear noise.\n\nOne page, one H1, clear sections below it. Your developer fixes this in minutes.\n\nLink in comments.",
+      "hashtags": [
+        "#SEO",
+        "#WebDevelopment",
+        "#SouthAfrica",
+        "#SME"
+      ],
+      "reviewed": true,
+      "published": null
+    },
+    {
+      "date": "2026-10-03",
+      "day": "Saturday",
       "slot": "17:00",
       "platform": "Instagram",
       "pillar": "AWARENESS",
@@ -1432,6 +1723,42 @@
         "#ContentMarketing",
         "#GEO",
         "#SEO",
+        "#SouthAfrica",
+        "#SME"
+      ],
+      "reviewed": true,
+      "published": null
+    },
+    {
+      "date": "2026-10-03",
+      "day": "Saturday",
+      "slot": "17:00",
+      "platform": "LinkedIn",
+      "pillar": "AWARENESS",
+      "format": "post",
+      "headline": "Cheap hosting is the most expensive line item.",
+      "body": "R99 hosting that loads in nine seconds costs you every visitor who leaves and every AI crawler that gives up. Good hosting for a small site costs less than one lost job.\n\nSpeed is infrastructure, not luxury. Check your load time today, it takes ten seconds.\n\nLink in comments.",
+      "hashtags": [
+        "#WebDevelopment",
+        "#Hosting",
+        "#B2B",
+        "#SouthAfrica"
+      ],
+      "reviewed": true,
+      "published": null
+    },
+    {
+      "date": "2026-10-03",
+      "day": "Saturday",
+      "slot": "17:00",
+      "platform": "Facebook",
+      "pillar": "AWARENESS",
+      "format": "post",
+      "headline": "Evening thought: simple beats clever.",
+      "body": "Clever websites win awards. Simple websites win customers. One clear offer, one tap to contact, loads fast.\n\nBefore you admire a fancy site, ask what it sells in five seconds. If you cannot tell, neither can your customer.\n\nLink in comments.",
+      "hashtags": [
+        "#WebDevelopment",
+        "#Simplicity",
         "#SouthAfrica",
         "#SME"
       ],
@@ -1460,6 +1787,41 @@
     {
       "date": "2026-10-04",
       "day": "Sunday",
+      "slot": "08:00",
+      "platform": "Facebook",
+      "pillar": "AWARENESS",
+      "format": "post",
+      "headline": "New month planning starts with a number.",
+      "body": "October plans written on vibes fail by November. One honest score across seven pillars tells you where the money goes first.\n\nRun the free scan with your Sunday coffee. Ninety seconds, no email, no call after.\n\nLink in comments. Planning beats hoping.",
+      "hashtags": [
+        "#Audit",
+        "#Planning",
+        "#SouthAfrica",
+        "#SME"
+      ],
+      "reviewed": true,
+      "published": null
+    },
+    {
+      "date": "2026-10-04",
+      "day": "Sunday",
+      "slot": "08:00",
+      "platform": "Instagram",
+      "pillar": "AWARENESS",
+      "format": "carousel",
+      "headline": "KNOW YOUR NUMBER",
+      "body": "SLIDE 1: KNOW YOUR NUMBER\n\nCaption: One score, seven pillars, ninety seconds. Start October with facts. Link in bio.",
+      "hashtags": [
+        "#Audit",
+        "#SouthAfrica",
+        "#SME"
+      ],
+      "reviewed": true,
+      "published": null
+    },
+    {
+      "date": "2026-10-04",
+      "day": "Sunday",
       "slot": "12:30",
       "platform": "Instagram",
       "pillar": "AWARENESS",
@@ -1480,6 +1842,42 @@
     {
       "date": "2026-10-04",
       "day": "Sunday",
+      "slot": "12:30",
+      "platform": "LinkedIn",
+      "pillar": "AWARENESS",
+      "format": "post",
+      "headline": "Benchmarks beat opinions in Monday meetings.",
+      "body": "Walk in with a number, not a feeling. A seven pillar score out of 100 ends the debate about whether the website is fine.\n\nBelow 50 means foundations first. Above 70 means optimise, not rebuild. Either way the room decides in minutes.\n\nRun it free tonight. Link in comments.",
+      "hashtags": [
+        "#Audit",
+        "#B2B",
+        "#SouthAfrica",
+        "#DigitalMarketing"
+      ],
+      "reviewed": true,
+      "published": null
+    },
+    {
+      "date": "2026-10-04",
+      "day": "Sunday",
+      "slot": "12:30",
+      "platform": "Facebook",
+      "pillar": "AWARENESS",
+      "format": "post",
+      "headline": "What does 50 out of 100 actually mean?",
+      "body": "It means half your digital foundations are missing. Usually speed, schema, and an unclaimed profile. All fixable, none expensive.\n\nThe score is not a grade on your business. It grades what machines can verify about it.\n\nGet yours free. Link in comments.",
+      "hashtags": [
+        "#Audit",
+        "#SouthAfrica",
+        "#SME",
+        "#DigitalMarketing"
+      ],
+      "reviewed": true,
+      "published": null
+    },
+    {
+      "date": "2026-10-04",
+      "day": "Sunday",
       "slot": "17:00",
       "platform": "Facebook",
       "pillar": "AWARENESS",
@@ -1492,6 +1890,42 @@
         "#SME",
         "#FreeTools",
         "#SundayMotivation"
+      ],
+      "reviewed": true,
+      "published": null
+    },
+    {
+      "date": "2026-10-04",
+      "day": "Sunday",
+      "slot": "17:00",
+      "platform": "LinkedIn",
+      "pillar": "AWARENESS",
+      "format": "post",
+      "headline": "No email gate. That is deliberate.",
+      "body": "Our scan asks for nothing upfront. No email, no phone, no callback queue. A gate would filter for the desperate, not the curious.\n\nWe would rather score a thousand businesses free than trap ten in a funnel. The work sells itself or it does not.\n\nLink in comments. Ninety seconds.",
+      "hashtags": [
+        "#Audit",
+        "#Trust",
+        "#B2B",
+        "#SouthAfrica"
+      ],
+      "reviewed": true,
+      "published": null
+    },
+    {
+      "date": "2026-10-04",
+      "day": "Sunday",
+      "slot": "17:00",
+      "platform": "Instagram",
+      "pillar": "AWARENESS",
+      "format": "carousel",
+      "headline": "NO GATE, JUST SCORE",
+      "body": "SLIDE 1: NO GATE, JUST SCORE\n\nCaption: No email, no call, no trap. A mirror, not a funnel. Link in bio. Comment AUDIT and I will DM you the link.",
+      "hashtags": [
+        "#Audit",
+        "#Trust",
+        "#SouthAfrica",
+        "#SME"
       ],
       "reviewed": true,
       "published": null
@@ -1518,6 +1952,42 @@
     {
       "date": "2026-10-05",
       "day": "Monday",
+      "slot": "08:00",
+      "platform": "Facebook",
+      "pillar": "AWARENESS",
+      "format": "post",
+      "headline": "Monday morning: check your auto-reply.",
+      "body": "Message your own business number right now, as a stranger would. What answers? Silence until 9am means every weekend enquiry waited hours.\n\nSet one honest auto-reply: thanks, hours, when a human responds. Two minutes, keeps every chat warm.\n\nLink in comments for sample wordings.",
+      "hashtags": [
+        "#WhatsApp",
+        "#SouthAfrica",
+        "#SME",
+        "#CustomerService"
+      ],
+      "reviewed": true,
+      "published": null
+    },
+    {
+      "date": "2026-10-05",
+      "day": "Monday",
+      "slot": "08:00",
+      "platform": "Instagram",
+      "pillar": "AWARENESS",
+      "format": "carousel",
+      "headline": "5 MINUTES OR LOST",
+      "body": "SLIDE 1: 5 MINUTES OR LOST\n\nCaption: Enquiries decay by the minute. Auto-reply in seconds, human in minutes. Save this. Link in bio.",
+      "hashtags": [
+        "#WhatsApp",
+        "#LeadGeneration",
+        "#SouthAfrica",
+        "#SME"
+      ],
+      "reviewed": true,
+      "published": null
+    },
+    {
+      "date": "2026-10-05",
+      "day": "Monday",
       "slot": "12:30",
       "platform": "Instagram",
       "pillar": "AWARENESS",
@@ -1537,6 +2007,42 @@
     {
       "date": "2026-10-05",
       "day": "Monday",
+      "slot": "12:30",
+      "platform": "LinkedIn",
+      "pillar": "AWARENESS",
+      "format": "post",
+      "headline": "Response time is a marketing channel now.",
+      "body": "Nobody compares your product at 8pm. They compare your response. Ten seconds versus tomorrow morning decides the deal before quality is even discussed.\n\nMeasure it this week: timestamp every enquiry, timestamp every first reply. The gap is your leak.\n\nLink in comments for the response-time worksheet.",
+      "hashtags": [
+        "#WhatsApp",
+        "#CustomerService",
+        "#B2B",
+        "#SouthAfrica"
+      ],
+      "reviewed": true,
+      "published": null
+    },
+    {
+      "date": "2026-10-05",
+      "day": "Monday",
+      "slot": "12:30",
+      "platform": "Facebook",
+      "pillar": "AWARENESS",
+      "format": "post",
+      "headline": "The quote that arrived second still won.",
+      "body": "Two plumbers, same suburb, same day. First quoted in four hours, second answered in four minutes with a rough range and a visit time. Guess who got the job.\n\nSpeed signals competence. Give ranges fast, exact numbers on site.\n\nLink in comments.",
+      "hashtags": [
+        "#WhatsApp",
+        "#Sales",
+        "#SouthAfrica",
+        "#SME"
+      ],
+      "reviewed": true,
+      "published": null
+    },
+    {
+      "date": "2026-10-05",
+      "day": "Monday",
       "slot": "17:00",
       "platform": "Facebook",
       "pillar": "AWARENESS",
@@ -1549,6 +2055,42 @@
         "#SME",
         "#LeadGeneration",
         "#SmallBusiness"
+      ],
+      "reviewed": true,
+      "published": null
+    },
+    {
+      "date": "2026-10-05",
+      "day": "Monday",
+      "slot": "17:00",
+      "platform": "LinkedIn",
+      "pillar": "AWARENESS",
+      "format": "post",
+      "headline": "One number everywhere is a strategy, not tidiness.",
+      "body": "Profile, website header, invoices, van doors, email signature. Same WhatsApp number in all five places means no lead ever wonders how to reach you.\n\nAudit yours tonight. Count how many different numbers a stranger can find. More than one is a problem.\n\nLink in comments.",
+      "hashtags": [
+        "#WhatsApp",
+        "#Branding",
+        "#B2B",
+        "#SouthAfrica"
+      ],
+      "reviewed": true,
+      "published": null
+    },
+    {
+      "date": "2026-10-05",
+      "day": "Monday",
+      "slot": "17:00",
+      "platform": "Instagram",
+      "pillar": "AWARENESS",
+      "format": "carousel",
+      "headline": "ONE NUMBER EVERYWHERE",
+      "body": "SLIDE 1: ONE NUMBER EVERYWHERE\n\nCaption: Profile, site, invoices, vans, signatures. One number, zero confusion. Audit yours tonight. Link in bio. Comment AUDIT and I will DM you the link.",
+      "hashtags": [
+        "#WhatsApp",
+        "#Branding",
+        "#SouthAfrica",
+        "#SME"
       ],
       "reviewed": true,
       "published": null
@@ -1575,6 +2117,42 @@
     {
       "date": "2026-10-06",
       "day": "Tuesday",
+      "slot": "08:00",
+      "platform": "Facebook",
+      "pillar": "AWARENESS",
+      "format": "post",
+      "headline": "Answer the price question publicly.",
+      "body": "How much does it cost is asked daily and answered never. A starting-from range on the page filters time-wasters and converts the serious.\n\nYou already answer it on WhatsApp all day. Publish the answer once.\n\nLink in comments for wording that works.",
+      "hashtags": [
+        "#Pricing",
+        "#Trust",
+        "#SouthAfrica",
+        "#SME"
+      ],
+      "reviewed": true,
+      "published": null
+    },
+    {
+      "date": "2026-10-06",
+      "day": "Tuesday",
+      "slot": "08:00",
+      "platform": "Instagram",
+      "pillar": "AWARENESS",
+      "format": "carousel",
+      "headline": "MINE YOUR QUOTES",
+      "body": "SLIDE 1: MINE YOUR QUOTES\n\nCaption: Customer words beat marketing words. Your quote book is the copy deck. Save this. Link in bio.",
+      "hashtags": [
+        "#ContentMarketing",
+        "#Copywriting",
+        "#SouthAfrica",
+        "#SME"
+      ],
+      "reviewed": true,
+      "published": null
+    },
+    {
+      "date": "2026-10-06",
+      "day": "Tuesday",
       "slot": "12:30",
       "platform": "Instagram",
       "pillar": "AWARENESS",
@@ -1587,6 +2165,41 @@
         "#SouthAfrica",
         "#SME",
         "#WhatsApp"
+      ],
+      "reviewed": true,
+      "published": null
+    },
+    {
+      "date": "2026-10-06",
+      "day": "Tuesday",
+      "slot": "12:30",
+      "platform": "LinkedIn",
+      "pillar": "AWARENESS",
+      "format": "post",
+      "headline": "Your best content writer is your quote book.",
+      "body": "Every quote you sent this month contains customer language: how they describe the problem, what they fear, what they compare. Mine it. The exact phrases become headings AI systems match.\n\nMarketing that sounds like the customer beats marketing that sounds like marketing.\n\nLink in comments for the mining method.",
+      "hashtags": [
+        "#ContentMarketing",
+        "#Copywriting",
+        "#B2B",
+        "#SouthAfrica"
+      ],
+      "reviewed": true,
+      "published": null
+    },
+    {
+      "date": "2026-10-06",
+      "day": "Tuesday",
+      "slot": "12:30",
+      "platform": "Facebook",
+      "pillar": "AWARENESS",
+      "format": "post",
+      "headline": "Screenshots are the new backlinks.",
+      "body": "Nobody shares your keyword page in the group chat. Everybody screenshots the clear answer, the price table, the checklist.\n\nDesign pages to be screenshotted: short lines, clear headings, one idea per block.\n\nLink in comments.",
+      "hashtags": [
+        "#ContentMarketing",
+        "#SouthAfrica",
+        "#SME"
       ],
       "reviewed": true,
       "published": null
@@ -1611,6 +2224,42 @@
       "published": null
     },
     {
+      "date": "2026-10-06",
+      "day": "Tuesday",
+      "slot": "17:00",
+      "platform": "LinkedIn",
+      "pillar": "AWARENESS",
+      "format": "post",
+      "headline": "One great page beats twelve thin ones.",
+      "body": "Twelve shallow service pages dilute you. One deep page that answers everything about one service concentrates you. AI cites depth, not breadth.\n\nPick your most profitable service. Write everything a buyer asks. Mark it up. That page works for years.\n\nLink in comments.",
+      "hashtags": [
+        "#ContentMarketing",
+        "#SEO",
+        "#B2B",
+        "#SouthAfrica"
+      ],
+      "reviewed": true,
+      "published": null
+    },
+    {
+      "date": "2026-10-06",
+      "day": "Tuesday",
+      "slot": "17:00",
+      "platform": "Facebook",
+      "pillar": "AWARENESS",
+      "format": "post",
+      "headline": "Tuesday tip: date your content.",
+      "body": "Undated pages rot quietly. Add visible dates to articles and update them yearly. Fresh dates earn clicks and citations.\n\nCheck your top five pages tonight. No date means no trust signal.\n\nLink in comments.",
+      "hashtags": [
+        "#ContentMarketing",
+        "#SEO",
+        "#SouthAfrica",
+        "#SME"
+      ],
+      "reviewed": true,
+      "published": null
+    },
+    {
       "date": "2026-10-07",
       "day": "Wednesday",
       "slot": "08:00",
@@ -1625,6 +2274,42 @@
         "#B2B",
         "#SouthAfrica",
         "#DigitalMarketing"
+      ],
+      "reviewed": true,
+      "published": null
+    },
+    {
+      "date": "2026-10-07",
+      "day": "Wednesday",
+      "slot": "08:00",
+      "platform": "Facebook",
+      "pillar": "AWARENESS",
+      "format": "post",
+      "headline": "Ask one customer for a review today.",
+      "body": "One honest review with specifics beats ten silent stars. Ask todays happy customer: what did we fix, how fast, would you refer us.\n\nThen reply to it publicly. That reply is read by humans and machines alike.\n\nLink in comments.",
+      "hashtags": [
+        "#Reviews",
+        "#SouthAfrica",
+        "#SME",
+        "#Trust"
+      ],
+      "reviewed": true,
+      "published": null
+    },
+    {
+      "date": "2026-10-07",
+      "day": "Wednesday",
+      "slot": "08:00",
+      "platform": "Instagram",
+      "pillar": "AWARENESS",
+      "format": "carousel",
+      "headline": "FRESH BEATS PERFECT",
+      "body": "SLIDE 1: FRESH BEATS PERFECT\n\nCaption: Monthly updates compound past perfect old pages. One answer a month. Save this. Link in bio.",
+      "hashtags": [
+        "#GEO",
+        "#ContentMarketing",
+        "#SouthAfrica",
+        "#SME"
       ],
       "reviewed": true,
       "published": null
@@ -1652,6 +2337,42 @@
     {
       "date": "2026-10-07",
       "day": "Wednesday",
+      "slot": "12:30",
+      "platform": "LinkedIn",
+      "pillar": "AWARENESS",
+      "format": "post",
+      "headline": "Fresh beats perfect in AI search.",
+      "body": "Content decays near two percent a month in citation value. The competitor updating monthly compounds past your perfect 2023 page.\n\nFreshness is maintenance, not inspiration. One updated answer a month keeps you quotable.\n\nLink in comments for the upkeep calendar.",
+      "hashtags": [
+        "#GEO",
+        "#ContentMarketing",
+        "#B2B",
+        "#SouthAfrica"
+      ],
+      "reviewed": true,
+      "published": null
+    },
+    {
+      "date": "2026-10-07",
+      "day": "Wednesday",
+      "slot": "12:30",
+      "platform": "Facebook",
+      "pillar": "AWARENESS",
+      "format": "post",
+      "headline": "Consistency is the whole algorithm.",
+      "body": "Same business name everywhere. Same hours. Same number. Monthly fresh answer. Answered reviews. That list, repeated, is ninety percent of AI visibility.\n\nNo hacks, no budget needed for step one. Start with the name check tonight.\n\nLink in comments.",
+      "hashtags": [
+        "#GEO",
+        "#Consistency",
+        "#SouthAfrica",
+        "#SME"
+      ],
+      "reviewed": true,
+      "published": null
+    },
+    {
+      "date": "2026-10-07",
+      "day": "Wednesday",
       "slot": "17:00",
       "platform": "Facebook",
       "pillar": "AWARENESS",
@@ -1664,6 +2385,42 @@
         "#SME",
         "#DigitalMarketing",
         "#MarketingStrategy"
+      ],
+      "reviewed": true,
+      "published": null
+    },
+    {
+      "date": "2026-10-07",
+      "day": "Wednesday",
+      "slot": "17:00",
+      "platform": "LinkedIn",
+      "pillar": "AWARENESS",
+      "format": "post",
+      "headline": "Reviews are AI training data now.",
+      "body": "Every answered review teaches machines your hours, your quality, your trade. Unanswered reviews teach nothing, or worse.\n\nReply to all of them, good and bad, in plain professional words. It is public, permanent, and parsed.\n\nLink in comments.",
+      "hashtags": [
+        "#Reviews",
+        "#GEO",
+        "#B2B",
+        "#SouthAfrica"
+      ],
+      "reviewed": true,
+      "published": null
+    },
+    {
+      "date": "2026-10-07",
+      "day": "Wednesday",
+      "slot": "17:00",
+      "platform": "Instagram",
+      "pillar": "AWARENESS",
+      "format": "carousel",
+      "headline": "REVIEWS TRAIN AI",
+      "body": "SLIDE 1: REVIEWS TRAIN AI\n\nCaption: Answered reviews teach machines your trade. Reply to all of them. Link in bio. Comment AUDIT and I will DM you the link.",
+      "hashtags": [
+        "#Reviews",
+        "#GEO",
+        "#SouthAfrica",
+        "#SME"
       ],
       "reviewed": true,
       "published": null
