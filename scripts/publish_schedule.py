@@ -48,6 +48,15 @@ def normalize_slot(slot_str):
         return "evening"
     return s
 
+def strip_caption_label(text):
+    """Remove a leading 'Caption:' meta-label so it never goes live.
+
+    Schedule bodies store the caption as 'Caption: ...' — that prefix is an
+    internal marker, not post copy. Publishing it makes the AI authorship
+    obvious. Case-insensitive, leading whitespace tolerated.
+    """
+    return re.sub(r'(?i)^\s*caption\s*:\s*', '', text or '').strip()
+
 def render_html_carousel_slides(body_text, brand_name):
     """Parse SLIDE 1, SLIDE 2 etc. and render 1080x1080 HTML/CSS slides via Playwright Chromium."""
     slide_matches = re.split(r'(SLIDE\s+\d+[^:\n]*:)', body_text, flags=re.IGNORECASE)
@@ -62,7 +71,7 @@ def render_html_carousel_slides(body_text, brand_name):
             if "Caption:" in content or "CAPTION:" in content:
                 parts = re.split(r'Caption:', content, flags=re.IGNORECASE)
                 content = parts[0].strip()
-                caption = "Caption: " + parts[1].strip()
+                caption = strip_caption_label(parts[1])
             parsed_slides.append((header, content))
             
     if not parsed_slides:
@@ -78,8 +87,8 @@ def render_html_carousel_slides(body_text, brand_name):
         page = browser.new_page(viewport={"width": 1080, "height": 1080})
         
         for idx, (title, content) in enumerate(parsed_slides, start=1):
-            clean_content = html.escape(content.strip('"\''))
-            disp_title = re.sub(r'(?i)^slide\s*\d+\s*', '', title).strip().rstrip(':')
+            clean_content = html.escape(content.strip('"\'').replace('"', ''))
+            disp_title = re.sub(r'(?i)^slide\s*\d+\s*', '', title).strip().rstrip(':').strip('"').strip()
             disp_title_esc = html.escape(disp_title)
             variant = "cover" if idx == 1 else ("closer" if idx == total_slides else "signal")
             eyebrow = "HAPPY HUNTER DIGITAL • SMART MARKETING" if variant == "cover" else (
@@ -853,7 +862,7 @@ def publish_post(brand_name, post, dry_run=False):
 
     is_video = format_type in ["video", "reel"] or "[video]" in post.get("body", "").lower() or "[reel]" in post.get("body", "").lower()
     if is_video:
-        caption_text = apply_lead_magnet(platform, f"{post['headline']}\n\n{post['body']}\n\n{' '.join(post.get('hashtags', []))}")
+        caption_text = apply_lead_magnet(platform, f"{post['headline']}\n\n{strip_caption_label(post['body'])}\n\n{' '.join(post.get('hashtags', []))}")
         video_path = resolve_video_path(post)
         print(f"\n--- VIDEO POST FOR: {brand_name} ---")
         print(f"Date: {post['date']} | Format: {format_type} | Platform: {platform} | Headline: {post['headline']}")
@@ -906,12 +915,13 @@ def publish_post(brand_name, post, dry_run=False):
         
     is_carousel = format_type == "carousel" or "SLIDE 1" in post.get("body", "")
     slide_paths = []
-    caption_text = apply_lead_magnet(platform, f"{post['headline']}\n\n{post['body']}\n\n{' '.join(post.get('hashtags', []))}")
+    caption_text = apply_lead_magnet(platform, f"{post['headline']}\n\n{strip_caption_label(post['body'])}\n\n{' '.join(post.get('hashtags', []))}")
     
     if is_carousel:
         slide_paths, extracted_caption = render_html_carousel_slides(post['body'], brand_name)
-        if extracted_caption.startswith("Caption:"):
-            caption_text = apply_lead_magnet(platform, f"{post['headline']}\n\n{extracted_caption}\n\n{' '.join(post.get('hashtags', []))}")
+        # Always use the extracted caption (label already stripped) — never the raw
+        # body with SLIDE markers, and never with a "Caption:" prefix.
+        caption_text = apply_lead_magnet(platform, f"{post['headline']}\n\n{strip_caption_label(extracted_caption)}\n\n{' '.join(post.get('hashtags', []))}")
     
     # Route Instagram vs Facebook BEFORE generic Facebook handling — try Private API -> Graph -> pack
     if platform.lower() in ["instagram", "tiktok"]:
@@ -997,7 +1007,7 @@ def publish_post(brand_name, post, dry_run=False):
     if platform.lower() == "linkedin":
         print(f"\n--- LINKEDIN POST FOR: {brand_name} ---")
         print(f"Date: {post['date']} | Slot: {post['slot']} | Pillar: {post['pillar']}")
-        linkedin_text = f"{post['headline']}\n\n{post['body']}\n\n{' '.join(post.get('hashtags', []))}"
+        linkedin_text = f"{post['headline']}\n\n{strip_caption_label(post['body'])}\n\n{' '.join(post.get('hashtags', []))}"
         print(f"Caption:\n{linkedin_text[:200]}...\n----------------------------------------")
         return publish_linkedin(linkedin_text, dry_run=dry_run)
     
@@ -1005,7 +1015,7 @@ def publish_post(brand_name, post, dry_run=False):
     if platform.lower() in ["x", "twitter"]:
         print(f"\n--- X/TWITTER POST FOR: {brand_name} ---")
         print(f"Date: {post['date']} | Slot: {post['slot']} | Pillar: {post['pillar']}")
-        x_text = f"{post['headline']}\n\n{post['body']}\n\n{' '.join(post.get('hashtags', []))}"
+        x_text = f"{post['headline']}\n\n{strip_caption_label(post['body'])}\n\n{' '.join(post.get('hashtags', []))}"
         # X has 280 char limit - truncate if needed
         if len(x_text) > 280:
             x_text = x_text[:277] + "..."
