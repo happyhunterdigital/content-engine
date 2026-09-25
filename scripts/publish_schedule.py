@@ -75,7 +75,14 @@ def render_html_carousel_slides(body_text, brand_name):
             parsed_slides.append((header, content))
             
     if not parsed_slides:
-        parsed_slides = [("SLIDE 1", body_text)]
+        # Single-image body (no SLIDE markers): still split out a Caption: section
+        # so the label never renders on the slide or leaks into the caption.
+        if re.search(r'Caption:', body_text, flags=re.IGNORECASE):
+            parts = re.split(r'Caption:', body_text, flags=re.IGNORECASE)
+            parsed_slides = [("SLIDE 1", parts[0].strip())]
+            caption = strip_caption_label(parts[1])
+        else:
+            parsed_slides = [("SLIDE 1", body_text)]
         
     os.makedirs("output_slides", exist_ok=True)
     slide_image_paths = []
@@ -91,6 +98,9 @@ def render_html_carousel_slides(body_text, brand_name):
             disp_title = re.sub(r'(?i)^slide\s*\d+\s*', '', title).strip().rstrip(':').strip('"').strip()
             disp_title_esc = html.escape(disp_title)
             variant = "cover" if idx == 1 else ("closer" if idx == total_slides else "signal")
+            # Freshness: two cover/closer styles, picked deterministically per post
+            # so carousels vary across days while staying on-brand.
+            style_b = (sum(ord(c) for c in disp_title) % 2 == 1)
             eyebrow = "HAPPY HUNTER DIGITAL • SMART MARKETING" if variant == "cover" else (
                 "THE FIX • 90 SECOND SCAN" if variant == "closer" else f"SIGNAL {idx:02d} / {total_slides:02d}")
             foot_right = "SWIPE" if idx < total_slides else "LINK IN BIO"
@@ -100,22 +110,43 @@ def render_html_carousel_slides(body_text, brand_name):
                 cover_line1 = " ".join(words[:half])
                 cover_line2 = " ".join(words[half:])
                 cover_line2_html = f'<span class="gold">{cover_line2}</span>' if cover_line2 else ""
-                slide_inner = (
-                    f'<div class="eyebrow">{eyebrow}</div>'
-                    f'<div class="cover-title">{cover_line1}<br>{cover_line2_html}</div>'
-                    f'<div class="cover-rule"></div>'
-                    f'<div class="cover-sub">{clean_content}</div>'
-                    f'<div><span class="cta-chip">COMMENT AUDIT, I WILL DM YOU THE LINK</span></div>'
-                )
+                if style_b:
+                    slide_inner = (
+                        f'<div class="coverB-card">'
+                        f'<div class="eyebrow coverB-eyebrow">{eyebrow}</div>'
+                        f'<div class="coverB-title">{cover_line1}<br>{cover_line2_html}</div>'
+                        f'<div class="coverB-rule"></div>'
+                        f'<div class="coverB-sub">{clean_content}</div>'
+                        f'<div><span class="cta-chip">COMMENT AUDIT, I WILL DM YOU THE LINK</span></div>'
+                        f'</div>'
+                    )
+                else:
+                    slide_inner = (
+                        f'<div class="eyebrow">{eyebrow}</div>'
+                        f'<div class="cover-title">{cover_line1}<br>{cover_line2_html}</div>'
+                        f'<div class="cover-rule"></div>'
+                        f'<div class="cover-sub">{clean_content}</div>'
+                        f'<div><span class="cta-chip">COMMENT AUDIT, I WILL DM YOU THE LINK</span></div>'
+                    )
             elif variant == "closer":
-                slide_inner = (
-                    f'<div class="closer-panel">'
-                    f'<div class="closer-kicker">{eyebrow}</div>'
-                    f'<div class="closer-title">{disp_title_esc}</div>'
-                    f'<div class="closer-sub">{clean_content}</div>'
-                    f'<div><span class="closer-url">COMMENT AUDIT FOR INSTANT ACCESS</span></div>'
-                    f'</div>'
-                )
+                if style_b:
+                    slide_inner = (
+                        f'<div class="closerB-panel">'
+                        f'<div class="closer-kicker">{eyebrow}</div>'
+                        f'<div class="closerB-title">{disp_title_esc}</div>'
+                        f'<div class="closerB-sub">{clean_content}</div>'
+                        f'<div><span class="cta-chip">COMMENT AUDIT FOR INSTANT ACCESS</span></div>'
+                        f'</div>'
+                    )
+                else:
+                    slide_inner = (
+                        f'<div class="closer-panel">'
+                        f'<div class="closer-kicker">{eyebrow}</div>'
+                        f'<div class="closer-title">{disp_title_esc}</div>'
+                        f'<div class="closer-sub">{clean_content}</div>'
+                        f'<div><span class="closer-url">COMMENT AUDIT FOR INSTANT ACCESS</span></div>'
+                        f'</div>'
+                    )
             else:
                 slide_inner = (
                     f'<div class="bezel"><div class="bezel-inner">'
@@ -272,6 +303,67 @@ def render_html_carousel_slides(body_text, brand_name):
       letter-spacing: 1.5px;
       padding: 18px 34px;
       border-radius: 16px;
+    }}
+    .coverB-card {{
+      background: rgba(255,255,255,0.04);
+      border: 1px solid rgba(234,179,8,0.35);
+      border-radius: 36px;
+      padding: 64px 56px;
+      text-align: center;
+      z-index: 10;
+    }}
+    .coverB-eyebrow {{
+      margin-bottom: 30px;
+    }}
+    .coverB-title {{
+      font-size: 76px;
+      font-weight: 900;
+      line-height: 1.1;
+      color: #FFFFFF;
+      letter-spacing: -1px;
+      text-transform: uppercase;
+      margin-bottom: 28px;
+    }}
+    .coverB-title .gold {{ color: #EAB308; }}
+    .coverB-rule {{
+      width: 120px;
+      height: 8px;
+      background: #EAB308;
+      border-radius: 4px;
+      margin: 0 auto 30px auto;
+    }}
+    .coverB-sub {{
+      font-size: 29px;
+      font-weight: 500;
+      line-height: 1.5;
+      color: #9ca3af;
+      white-space: pre-line;
+      margin-bottom: 8px;
+    }}
+    .closerB-panel {{
+      background: #0a0a0a;
+      border: 2px solid #EAB308;
+      border-radius: 28px;
+      padding: 56px 52px;
+      text-align: center;
+      z-index: 10;
+    }}
+    .closerB-title {{
+      font-size: 58px;
+      font-weight: 900;
+      line-height: 1.12;
+      color: #FFFFFF;
+      text-transform: uppercase;
+      letter-spacing: -1px;
+      margin-bottom: 20px;
+    }}
+    .closerB-sub {{
+      font-size: 29px;
+      font-weight: 500;
+      line-height: 1.45;
+      color: #9ca3af;
+      white-space: pre-line;
+      margin-bottom: 10px;
     }}
     .bezel {{
       background: rgba(255,255,255,0.04);
