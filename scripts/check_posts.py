@@ -3,21 +3,24 @@ from datetime import datetime
 
 def fb_post_insights(post_id, token):
     """Engagement per FB page post. Needs read_insights on the token."""
-    try:
-        r = requests.get(f"https://graph.facebook.com/v26.0/{post_id}/insights",
-                         params={"metric": "post_impressions,post_impressions_unique,post_engaged_users,post_clicks",
-                                 "access_token": token}, timeout=20)
-        if r.status_code == 200:
-            out = []
-            for m in r.json().get("data", []):
-                vals = m.get("values", [])
-                v = vals[0].get("value") if vals else None
-                out.append(f"{m.get('name')}={v}")
-            print(f"    ENGAGE [{post_id}]: " + (" | ".join(out) if out else "no rows"))
-        else:
-            print(f"    ENGAGE [{post_id}]: BLOCKED {r.status_code} {r.text[:220]}")
-    except Exception as e:
-        print(f"    ENGAGE [{post_id}]: exception {e}")
+    out = []
+    for metric in ["post_impressions", "post_impressions_unique", "post_engaged_users",
+                   "post_clicks_by_type", "post_reactions_by_type_total"]:
+        try:
+            r = requests.get(f"https://graph.facebook.com/v26.0/{post_id}/insights",
+                             params={"metric": metric, "access_token": token}, timeout=20)
+            if r.status_code == 200:
+                for m in r.json().get("data", []):
+                    vals = m.get("values", [])
+                    v = vals[0].get("value") if vals else None
+                    out.append(f"{m.get('name')}={v}")
+            else:
+                out.append(f"{metric}:BLOCKED {r.status_code}")
+                break
+        except Exception as e:
+            out.append(f"{metric}:err {e}")
+            break
+    print(f"    ENGAGE [{post_id}]: " + (" | ".join(out) if out else "no rows"))
 
 def check(brand, page_id, token):
     if not page_id or not token:
