@@ -1083,7 +1083,9 @@
         "#DigitalMarketing",
         "#AIVisibility"
       ],
-      "reviewed": true
+      "reviewed": true,
+      "published": true,
+      "published_at": "2026-09-26T13:02:23.922433+02:00"
     },
     {
       "date": "2026-09-27",
