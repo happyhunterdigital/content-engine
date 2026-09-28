@@ -1167,7 +1167,8 @@
         "#SouthAfrica",
         "#DigitalMarketing",
         "#MarketingIndustry"
-      ]
+      ],
+      "reviewed": true
     },
     {
       "date": "2026-09-28",
@@ -1185,7 +1186,8 @@
         "#AIVisibility",
         "#DigitalMarketing",
         "#SmallBusinessSA"
-      ]
+      ],
+      "reviewed": true
     },
     {
       "date": "2026-09-28",
@@ -1203,7 +1205,8 @@
         "#MarketingIndustry"
       ],
       "format": "post",
-      "headline": "The marketing industry profits from your ignorance about GEO"
+      "headline": "The marketing industry profits from your ignorance about GEO",
+      "reviewed": true
     },
     {
       "date": "2026-09-29",
