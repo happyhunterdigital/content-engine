@@ -1168,7 +1168,9 @@
         "#DigitalMarketing",
         "#MarketingIndustry"
       ],
-      "reviewed": true
+      "reviewed": true,
+      "published": true,
+      "published_at": "2026-09-28T23:39:53.897133+02:00"
     },
     {
       "date": "2026-09-28",
@@ -1206,7 +1208,9 @@
       ],
       "format": "post",
       "headline": "The marketing industry profits from your ignorance about GEO",
-      "reviewed": true
+      "reviewed": true,
+      "published": true,
+      "published_at": "2026-09-28T23:39:54.480679+02:00"
     },
     {
       "date": "2026-09-29",
