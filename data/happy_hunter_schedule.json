@@ -1229,7 +1229,9 @@
         "#EndOfMonth",
         "#FreeAudit"
       ],
-      "reviewed": true
+      "reviewed": true,
+      "published": true,
+      "published_at": "2026-09-29T22:30:27.353323+02:00"
     },
     {
       "date": "2026-09-29",
@@ -1248,7 +1250,9 @@
       ],
       "format": "post",
       "headline": "Before October hits, do these 3 things",
-      "reviewed": true
+      "reviewed": true,
+      "published": true,
+      "published_at": "2026-09-29T22:30:32.480471+02:00"
     },
     {
       "date": "2026-09-30",
