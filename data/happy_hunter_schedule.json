@@ -1272,7 +1272,9 @@
         "#SME",
         "#BusinessGrowth"
       ],
-      "reviewed": true
+      "reviewed": true,
+      "published": true,
+      "published_at": "2026-09-30T14:08:47.682890+02:00"
     },
     {
       "date": "2026-09-30",
@@ -1291,7 +1293,9 @@
         "#MonthlyRecap",
         "#DigitalSurvivalScore"
       ],
-      "reviewed": true
+      "reviewed": true,
+      "published": true,
+      "published_at": "2026-09-30T14:08:56.097271+02:00"
     },
     {
       "date": "2026-10-01",
