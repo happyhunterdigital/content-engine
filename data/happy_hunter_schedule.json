@@ -1490,7 +1490,8 @@
         "#WebDevelopment"
       ],
       "reviewed": true,
-      "published": null
+      "published": true,
+      "published_at": "2026-10-02T14:04:35.857048+02:00"
     },
     {
       "date": "2026-10-02",
@@ -1509,7 +1510,8 @@
         "#Randburg"
       ],
       "reviewed": true,
-      "published": null
+      "published": true,
+      "published_at": "2026-10-02T14:04:41.062638+02:00"
     },
     {
       "date": "2026-10-02",
@@ -1527,7 +1529,8 @@
         "#SME"
       ],
       "reviewed": true,
-      "published": null
+      "published": true,
+      "published_at": "2026-10-02T14:05:31.060538+02:00"
     },
     {
       "date": "2026-10-02",
@@ -1547,7 +1550,8 @@
         "#SME"
       ],
       "reviewed": true,
-      "published": null
+      "published": true,
+      "published_at": "2026-10-02T14:06:57.565027+02:00"
     },
     {
       "date": "2026-10-02",
@@ -1565,7 +1569,8 @@
         "#SouthAfrica"
       ],
       "reviewed": true,
-      "published": null
+      "published": true,
+      "published_at": "2026-10-02T14:06:58.232390+02:00"
     },
     {
       "date": "2026-10-02",
@@ -1583,7 +1588,8 @@
         "#SME"
       ],
       "reviewed": true,
-      "published": null
+      "published": true,
+      "published_at": "2026-10-02T14:07:00.844924+02:00"
     },
     {
       "date": "2026-10-02",
@@ -1602,7 +1608,8 @@
         "#WebDevelopment"
       ],
       "reviewed": true,
-      "published": null
+      "published": true,
+      "published_at": "2026-10-02T14:07:03.205053+02:00"
     },
     {
       "date": "2026-10-02",
@@ -1620,7 +1627,8 @@
         "#SouthAfrica"
       ],
       "reviewed": true,
-      "published": null
+      "published": true,
+      "published_at": "2026-10-02T14:07:03.892007+02:00"
     },
     {
       "date": "2026-10-02",
@@ -1638,7 +1646,8 @@
         "#SME"
       ],
       "reviewed": true,
-      "published": null
+      "published": true,
+      "published_at": "2026-10-02T14:07:51.873161+02:00"
     },
     {
       "date": "2026-10-03",
