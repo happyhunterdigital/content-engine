@@ -1722,7 +1722,8 @@
         "#SME"
       ],
       "reviewed": true,
-      "published": null
+      "published": true,
+      "published_at": "2026-10-03T13:17:52.679215+02:00"
     },
     {
       "date": "2026-10-03",
@@ -1740,7 +1741,8 @@
         "#SouthAfrica"
       ],
       "reviewed": true,
-      "published": null
+      "published": true,
+      "published_at": "2026-10-03T13:17:53.327842+02:00"
     },
     {
       "date": "2026-10-03",
@@ -1758,7 +1760,8 @@
         "#SME"
       ],
       "reviewed": true,
-      "published": null
+      "published": true,
+      "published_at": "2026-10-03T13:17:56.782892+02:00"
     },
     {
       "date": "2026-10-03",
