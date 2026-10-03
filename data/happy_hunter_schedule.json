@@ -1666,7 +1666,8 @@
         "#SME"
       ],
       "reviewed": true,
-      "published": null
+      "published": true,
+      "published_at": "2026-10-03T21:05:08.504716+02:00"
     },
     {
       "date": "2026-10-03",
@@ -1685,7 +1686,8 @@
         "#FreeTools"
       ],
       "reviewed": true,
-      "published": null
+      "published": true,
+      "published_at": "2026-10-03T21:05:12.933425+02:00"
     },
     {
       "date": "2026-10-03",
@@ -1703,7 +1705,8 @@
         "#SME"
       ],
       "reviewed": true,
-      "published": null
+      "published": true,
+      "published_at": "2026-10-03T21:06:05.972116+02:00"
     },
     {
       "date": "2026-10-03",
@@ -1780,7 +1783,8 @@
         "#SME"
       ],
       "reviewed": true,
-      "published": null
+      "published": true,
+      "published_at": "2026-10-03T21:06:53.701534+02:00"
     },
     {
       "date": "2026-10-03",
@@ -1798,7 +1802,8 @@
         "#SouthAfrica"
       ],
       "reviewed": true,
-      "published": null
+      "published": true,
+      "published_at": "2026-10-03T21:06:54.406442+02:00"
     },
     {
       "date": "2026-10-03",
@@ -1816,7 +1821,8 @@
         "#SME"
       ],
       "reviewed": true,
-      "published": null
+      "published": true,
+      "published_at": "2026-10-03T21:06:56.908748+02:00"
     },
     {
       "date": "2026-10-04",
