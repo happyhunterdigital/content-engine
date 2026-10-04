@@ -1841,7 +1841,8 @@
         "#GEO"
       ],
       "reviewed": true,
-      "published": null
+      "published": true,
+      "published_at": "2026-10-04T21:18:20.920293+02:00"
     },
     {
       "date": "2026-10-04",
@@ -1859,7 +1860,8 @@
         "#SME"
       ],
       "reviewed": true,
-      "published": null
+      "published": true,
+      "published_at": "2026-10-04T21:18:25.588380+02:00"
     },
     {
       "date": "2026-10-04",
@@ -1876,7 +1878,8 @@
         "#SME"
       ],
       "reviewed": true,
-      "published": null
+      "published": true,
+      "published_at": "2026-10-04T21:19:18.862117+02:00"
     },
     {
       "date": "2026-10-04",
@@ -1954,7 +1957,8 @@
         "#SundayMotivation"
       ],
       "reviewed": true,
-      "published": null
+      "published": true,
+      "published_at": "2026-10-04T21:19:21.774350+02:00"
     },
     {
       "date": "2026-10-04",
@@ -1972,7 +1976,8 @@
         "#SouthAfrica"
       ],
       "reviewed": true,
-      "published": null
+      "published": true,
+      "published_at": "2026-10-04T21:19:22.707001+02:00"
     },
     {
       "date": "2026-10-04",
@@ -1990,7 +1995,8 @@
         "#SME"
       ],
       "reviewed": true,
-      "published": null
+      "published": true,
+      "published_at": "2026-10-04T21:20:08.986894+02:00"
     },
     {
       "date": "2026-10-05",
