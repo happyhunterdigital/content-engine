@@ -2189,7 +2189,8 @@
         "#B2B"
       ],
       "reviewed": true,
-      "published": null
+      "published": true,
+      "published_at": "2026-10-06T00:21:56.710367+02:00"
     },
     {
       "date": "2026-10-06",
@@ -2207,7 +2208,8 @@
         "#SME"
       ],
       "reviewed": true,
-      "published": null
+      "published": true,
+      "published_at": "2026-10-06T00:21:59.983751+02:00"
     },
     {
       "date": "2026-10-06",
@@ -2225,7 +2227,8 @@
         "#SME"
       ],
       "reviewed": true,
-      "published": null
+      "published": true,
+      "published_at": "2026-10-06T00:22:43.342190+02:00"
     },
     {
       "date": "2026-10-06",
@@ -2244,7 +2247,8 @@
         "#WhatsApp"
       ],
       "reviewed": true,
-      "published": null
+      "published": true,
+      "published_at": "2026-10-06T00:23:54.468432+02:00"
     },
     {
       "date": "2026-10-06",
@@ -2262,7 +2266,8 @@
         "#SouthAfrica"
       ],
       "reviewed": true,
-      "published": null
+      "published": true,
+      "published_at": "2026-10-06T00:23:55.164163+02:00"
     },
     {
       "date": "2026-10-06",
@@ -2279,7 +2284,8 @@
         "#SME"
       ],
       "reviewed": true,
-      "published": null
+      "published": true,
+      "published_at": "2026-10-06T00:23:57.366210+02:00"
     },
     {
       "date": "2026-10-06",
@@ -2298,7 +2304,8 @@
         "#WebDevelopment"
       ],
       "reviewed": true,
-      "published": null
+      "published": true,
+      "published_at": "2026-10-06T00:24:50.352053+02:00"
     },
     {
       "date": "2026-10-06",
@@ -2316,7 +2323,8 @@
         "#SouthAfrica"
       ],
       "reviewed": true,
-      "published": null
+      "published": true,
+      "published_at": "2026-10-06T00:24:51.019198+02:00"
     },
     {
       "date": "2026-10-06",
@@ -2334,7 +2342,8 @@
         "#SME"
       ],
       "reviewed": true,
-      "published": null
+      "published": true,
+      "published_at": "2026-10-06T00:24:54.491607+02:00"
     },
     {
       "date": "2026-10-07",
