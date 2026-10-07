@@ -2362,7 +2362,8 @@
         "#DigitalMarketing"
       ],
       "reviewed": true,
-      "published": null
+      "published": true,
+      "published_at": "2026-10-07T14:52:06.628235+02:00"
     },
     {
       "date": "2026-10-07",
@@ -2380,7 +2381,8 @@
         "#Trust"
       ],
       "reviewed": true,
-      "published": null
+      "published": true,
+      "published_at": "2026-10-07T14:52:12.733317+02:00"
     },
     {
       "date": "2026-10-07",
@@ -2398,7 +2400,8 @@
         "#SME"
       ],
       "reviewed": true,
-      "published": null
+      "published": true,
+      "published_at": "2026-10-07T14:53:03.871210+02:00"
     },
     {
       "date": "2026-10-07",
@@ -2418,7 +2421,8 @@
         "#LeadGeneration"
       ],
       "reviewed": true,
-      "published": null
+      "published": true,
+      "published_at": "2026-10-07T14:54:38.092737+02:00"
     },
     {
       "date": "2026-10-07",
@@ -2436,7 +2440,8 @@
         "#SouthAfrica"
       ],
       "reviewed": true,
-      "published": null
+      "published": true,
+      "published_at": "2026-10-07T14:54:38.749167+02:00"
     },
     {
       "date": "2026-10-07",
@@ -2454,7 +2459,8 @@
         "#SME"
       ],
       "reviewed": true,
-      "published": null
+      "published": true,
+      "published_at": "2026-10-07T14:54:42.381717+02:00"
     },
     {
       "date": "2026-10-07",
@@ -2473,7 +2479,8 @@
         "#MarketingStrategy"
       ],
       "reviewed": true,
-      "published": null
+      "published": true,
+      "published_at": "2026-10-07T14:54:44.728731+02:00"
     },
     {
       "date": "2026-10-07",
@@ -2491,7 +2498,8 @@
         "#SouthAfrica"
       ],
       "reviewed": true,
-      "published": null
+      "published": true,
+      "published_at": "2026-10-07T14:54:45.366317+02:00"
     },
     {
       "date": "2026-10-07",
@@ -2509,7 +2517,8 @@
         "#SME"
       ],
       "reviewed": true,
-      "published": null
+      "published": true,
+      "published_at": "2026-10-07T14:55:36.883043+02:00"
     }
   ]
 }
